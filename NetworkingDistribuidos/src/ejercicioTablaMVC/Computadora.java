@@ -16,11 +16,12 @@ public class Computadora implements Serializable
 	float UsoMemoria;
 	double UsoCpu;
 	long Latencia;
+	int puntos;
 	
 	
-	
+	//Constructor
 	public Computadora(String cliente, String iP, String estado, String procesador, String velocidad, int nucleos,
-			String capacidad, String sO, float UsoMemoria, double UsoCpu, long Latencia) 
+			String capacidad, String sO, float UsoMemoria, double UsoCpu, long Latencia, int puntos) 
 	{
 		this.Cliente = cliente;
 		this.IP = iP;
@@ -33,11 +34,22 @@ public class Computadora implements Serializable
 		this.UsoMemoria = UsoMemoria;
 		this.UsoCpu = UsoCpu;
 		this.Latencia = Latencia;
+		this.puntos = puntos;
 	}
 	
+	//Constructor Generico
 	public Computadora()
 	{
 		
+	}
+	
+	//---------------------------Getters y Setters---------------------------
+	public int getPuntos() {
+		return puntos;
+	}
+
+	public void setPuntos(int puntos) {
+		this.puntos = puntos;
 	}
 
 	public String getCliente() {

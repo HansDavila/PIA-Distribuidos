@@ -100,7 +100,7 @@ public class VistaCliente extends JFrame {
 		txtIpServer.setFont(new Font("Arial", Font.PLAIN, 19));
 		txtIpServer.setColumns(10);
 		txtIpServer.setBounds(195, 165, 192, 24);
-		txtIpServer.setText("127.0.0.1");
+		txtIpServer.setText("25.8.192.78");
 		contentPane.add(txtIpServer);
 		
 		JLabel lblSocket = new JLabel("Socket:");

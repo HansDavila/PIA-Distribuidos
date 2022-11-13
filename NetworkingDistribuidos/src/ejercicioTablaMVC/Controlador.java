@@ -103,6 +103,7 @@ public class Controlador implements ActionListener
 			Computadora MiCompu = M.inicializarComputadora();
 			MiCompu.setCliente(VC.txtNombre.getText());
 			MiCompu.setEstado("Conectado");
+			MiCompu.setPuntos(0);
 			
 			//cambia los txts de la vista
 			VC.txtEstado.setText("Conectado");

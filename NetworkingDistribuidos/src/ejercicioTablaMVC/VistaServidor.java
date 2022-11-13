@@ -52,7 +52,7 @@ public class VistaServidor extends JFrame {
 	private void crearGUI() {
 		setTitle("Dashboard - servidor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1314, 441);
+		setBounds(100, 100, 1400, 441);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -64,7 +64,7 @@ public class VistaServidor extends JFrame {
 		contentPane.add(lblTitulo);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(64, 139, 1206, 182);
+		scrollPane.setBounds(64, 139, 1280, 182);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -74,7 +74,7 @@ public class VistaServidor extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Cliente", "IP", "Estado", "Procesador", "Velocidad", "Nucleos", "Capacidad DD", "Version S.O.", "Uso CPU", "Uso Memoria", "Latencia"
+				"Cliente", "IP", "Estado", "Procesador", "Velocidad", "Nucleos", "Capacidad DD", "Version S.O.", "Uso CPU", "Uso Memoria", "Latencia", "Puntuación"
 			}
 		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(73);

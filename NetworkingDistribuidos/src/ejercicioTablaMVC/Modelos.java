@@ -63,10 +63,18 @@ public class Modelos
 		
 		MiCompu.setSO(sys.getOperatingSystem().getFamily() +" "+sys.getOperatingSystem().getVersionInfo());
 		
+		
+		
 		return MiCompu;
 	}
+	/*
+	int CalcularPuntos(Computadora PC) 
+	{
+		
+	}
+	*/
 	
-	//hilo para actualizar la tabla
+	//---------------------------hilo para actualizar la tabla---------------------------
 	static class modTabla extends Thread
 	{
 		//el de continuar es para checar si queremos seguir actualizando la tabla
