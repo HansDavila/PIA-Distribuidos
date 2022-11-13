@@ -63,16 +63,82 @@ public class Modelos
 		
 		MiCompu.setSO(sys.getOperatingSystem().getFamily() +" "+sys.getOperatingSystem().getVersionInfo());
 		
+		MiCompu.setPuntos(CalcularPuntosEstaticos(MiCompu));
+		
 		
 		
 		return MiCompu;
 	}
-	/*
-	int CalcularPuntos(Computadora PC) 
+	
+	int CalcularPuntosEstaticos(Computadora PC) 
 	{
+		int puntos = 0;
+		double velocidad = 0;
+		int numNucleos = 0;
+		String elemento;
+		String digits;
+		
+		//Calificar Procesador
+		if(PC.getProcesador().contains("Ryzen 5 5500U")) 
+		{
+			System.out.println("Este cliente contiene un ryzen 5");
+			puntos += 500;
+			
+		}else if(PC.getProcesador().contains("i5-8300H")) 
+		{
+			System.out.println("Este cliente contiene un Intel Core i5-8300H");
+			puntos += 300;
+			
+		}else if(PC.getProcesador().contains("Ryzen 5 3700U")) 
+		{
+			System.out.println("Este cliente contiene un Ryzen 5");
+			puntos += 250;
+			
+		}else if(PC.getProcesador().contains("i5-4310U")) 
+		{
+			System.out.println("Este cliente contiene un Ryzen 5");
+			puntos += 100;
+		}
+		
+		
+		//Calificar Velocidad
+		elemento = PC.getVelocidad();
+		digits = elemento.replaceAll("[^0-9.]", "");
+		velocidad = Double.parseDouble(digits);
+		puntos += (velocidad * 100);
+		
+		//Calificar N° de Nucleos
+		numNucleos = PC.getNucleos();
+		puntos += (numNucleos * 50);
+		
+		//Calificar Capacidad de DD
+		elemento = PC.getCapacidad();
+		digits = elemento.replaceAll("[^0-9.]", "");
+		Double capacidad = Double.parseDouble(digits);
+		puntos += (capacidad * 0.2);
+		
+		
+		//Calificar sistema operativo
+		if(PC.getSO().contains("Windows 11")) 
+		{
+			System.out.println("Este cliente tiene Windows 11");
+			puntos += 150;
+			
+		}else if(PC.getSO().contains("Windows 10")) 
+		{
+			System.out.println("Este cliente tiene Windows 10");
+			puntos += 100;
+			
+		}
+		
+		
+		
+		
+		return puntos;
+		
 		
 	}
-	*/
+	
 	
 	//---------------------------hilo para actualizar la tabla---------------------------
 	static class modTabla extends Thread
@@ -118,6 +184,7 @@ public class Modelos
 				                     Math.round(A.getUsoCpu()*100) +" %",
 				                     A.getUsoMemoria()+" %",
 				                     A.getLatencia(),
+				                     A.getPuntos()
 				              });
 					
 				}

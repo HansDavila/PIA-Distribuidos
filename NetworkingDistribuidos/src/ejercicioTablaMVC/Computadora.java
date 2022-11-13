@@ -15,7 +15,7 @@ public class Computadora implements Serializable
 	String SO;
 	float UsoMemoria;
 	double UsoCpu;
-	long Latencia;
+	long Latencia;S
 	int puntos;
 	
 	
@@ -122,6 +122,7 @@ public class Computadora implements Serializable
 
 	public void setUsoMemoria(float usoMemoria) {
 		UsoMemoria = usoMemoria;
+		setPuntos(puntos);
 	}
 
 	public double getUsoCpu() {
