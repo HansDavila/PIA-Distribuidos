@@ -1,6 +1,7 @@
 package ejercicioTablaMVC;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -132,12 +133,7 @@ public class Modelos
 			
 		}
 		
-		
-		
-		
 		return puntos;
-		
-		
 	}
 	
 	
@@ -170,6 +166,8 @@ public class Modelos
 				System.out.println("Se updatea tabla");
 				//Se destruye la tabla y se vuelve a contruir
 				model.setRowCount(0);
+				
+				Collections.sort(Controlador.computadoras);
 				for(Computadora A:Controlador.computadoras)
 				{
 					model.addRow(

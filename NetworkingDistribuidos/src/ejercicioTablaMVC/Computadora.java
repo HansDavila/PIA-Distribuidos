@@ -2,7 +2,7 @@ package ejercicioTablaMVC;
 
 import java.io.Serializable;
 
-public class Computadora implements Serializable
+public class Computadora implements Serializable, Comparable<Computadora>
 {
 	private static final long serialVersionUID = 1L;
 	String Cliente;
@@ -155,6 +155,21 @@ public class Computadora implements Serializable
 		return "Computadora [Cliente=" + Cliente + ", IP=" + IP + ", Estado=" + Estado + ", Procesador=" + Procesador
 				+ ", Velocidad=" + Velocidad + ", Nucleos=" + Nucleos + ", Capacidad=" + Capacidad + ", SO=" + SO
 				+ ", UsoMemoria=" + UsoMemoria + ", UsoCpu=" + UsoCpu + ", Latencia=" + Latencia + "]";
+	}
+
+	@Override
+	public int compareTo(Computadora e) {
+		if(e.getPuntos() < puntos ) 
+		{
+			return -1;
+		}else if(e.getPuntos() > puntos) 
+		{
+			return 0;
+		}else 
+		{
+			return 1;
+		}
+		
 	}
 
 	
