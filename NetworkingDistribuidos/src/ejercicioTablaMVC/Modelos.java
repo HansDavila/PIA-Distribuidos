@@ -64,6 +64,7 @@ public class Modelos
 		MiCompu.setSO(sys.getOperatingSystem().getFamily() +" "+sys.getOperatingSystem().getVersionInfo());
 		
 		MiCompu.setPuntos(CalcularPuntosEstaticos(MiCompu));
+		MiCompu.setPuntosEstaticos(CalcularPuntosEstaticos(MiCompu));
 		
 		
 		

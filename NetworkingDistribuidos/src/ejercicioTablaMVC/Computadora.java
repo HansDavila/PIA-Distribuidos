@@ -15,8 +15,9 @@ public class Computadora implements Serializable
 	String SO;
 	float UsoMemoria;
 	double UsoCpu;
-	long Latencia;S
+	long Latencia;
 	int puntos;
+	int puntosEstaticos;
 	
 	
 	//Constructor
@@ -51,9 +52,17 @@ public class Computadora implements Serializable
 	public void setPuntos(int puntos) {
 		this.puntos = puntos;
 	}
-
+	
 	public String getCliente() {
 		return Cliente;
+	}
+
+	public int getPuntosEstaticos() {
+		return puntosEstaticos;
+	}
+
+	public void setPuntosEstaticos(int puntosEstaticos) {
+		this.puntosEstaticos = puntosEstaticos;
 	}
 
 	public void setCliente(String cliente) {
