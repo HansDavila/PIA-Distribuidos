@@ -117,7 +117,7 @@ public class Modelos
 		elemento = PC.getCapacidad();
 		digits = elemento.replaceAll("[^0-9.]", "");
 		Double capacidad = Double.parseDouble(digits);
-		puntos += (capacidad * 0.2);
+		puntos += (capacidad * 0.1);
 		
 		
 		//Calificar sistema operativo
@@ -129,7 +129,7 @@ public class Modelos
 		}else if(PC.getSO().contains("Windows 10")) 
 		{
 			System.out.println("Este cliente tiene Windows 10");
-			puntos += 100;
+			puntos += 130;
 			
 		}
 		
@@ -168,8 +168,11 @@ public class Modelos
 				model.setRowCount(0);
 				
 				Collections.sort(Controlador.computadoras);
+				
 				for(Computadora A:Controlador.computadoras)
 				{
+					A.setPuntos(CalcularPuntosDinamicos(A));
+					
 					model.addRow(
 								new Object[]{
 				                     A.getCliente(),
@@ -196,6 +199,30 @@ public class Modelos
 
 		public void setContinuar(boolean continuar) {
 			this.continuar = continuar;
+		}
+		
+		int CalcularPuntosDinamicos(Computadora PC) 
+		{
+			int puntos = PC.getPuntosEstaticos();
+			double limCpu = 1000;
+			double limRam = 1000;
+			double cargaCpu = 0;
+			double cargaRam = 0;
+			
+			
+			//Calificar craga de Cpu Dinamica
+			cargaCpu = (PC.getUsoCpu()* 100);
+			System.out.println("Carpa cpu --> " + cargaCpu);
+			puntos += (limCpu - (cargaCpu * 10));
+			System.out.println("puntos cpu --> " + (limCpu - (cargaCpu * 10)));
+			
+			//Calificar craga de Cpu Dinamica
+			cargaRam = PC.getUsoMemoria();
+			System.out.println("Carpa ram --> " + cargaRam);
+			puntos += (limRam - (cargaRam * 10));
+			System.out.println("puntos ram --> " + (limRam - (cargaRam * 10)));
+			
+			return puntos;
 		}
 	}
 }
