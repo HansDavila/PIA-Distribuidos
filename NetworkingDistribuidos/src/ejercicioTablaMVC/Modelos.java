@@ -91,9 +91,9 @@ public class Modelos
 			System.out.println("Este cliente contiene un Intel Core i5-8300H");
 			puntos += 400;
 			
-		}else if(PC.getProcesador().contains("Ryzen 5 3700U")) 
+		}else if(PC.getProcesador().contains("Ryzen 7 3700U")) 
 		{
-			System.out.println("Este cliente contiene un Ryzen 5");
+			System.out.println("Este cliente contiene un Ryzen 7");
 			puntos += 350;
 			
 		}else if(PC.getProcesador().contains("i5-4310U")) 
@@ -130,7 +130,7 @@ public class Modelos
 		}else if(PC.getSO().contains("Windows 10")) 
 		{
 			System.out.println("Este cliente tiene Windows 10");
-			puntos += 130;
+			puntos += 100;
 			
 		}
 		
@@ -211,6 +211,7 @@ public class Modelos
 		int CalcularPuntosDinamicos(Computadora PC) 
 		{
 			int puntos = PC.getPuntosEstaticos();
+			System.out.println("ESTATICOS -> " + puntos);
 			double limCpu = 1000;
 			double limRam = 1000;
 			double cargaCpu = 0;
