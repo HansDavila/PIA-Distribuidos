@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import ejercicioTablaMVC.Modelos.modTabla;
@@ -108,6 +109,7 @@ public class Controlador implements ActionListener
 			VC.txtEstado.setText("Conectado");
 			VC.txtSocket.setEditable(false);
 			VC.txtIpServer.setEditable(false);
+			
 			
 			//CREAR CLIENTE
 			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()));

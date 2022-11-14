@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 import oshi.SystemInfo;
 
 public class Cliente extends Thread
@@ -26,12 +28,15 @@ public class Cliente extends Thread
 		Socket s = null;
 		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
+		boolean primeraConexion = true;
 		
 		try 
 		{
+			
 			//envio un objeto
 			while(MiCompu.getEstado().equals("Conectado"))
 			{
+				
 				//la latencia es la primer cosa que se hace porque al hacer el socket, es cuando el server
 				//recibe la senal de un paquete
 				MiCompu.setLatencia(System.currentTimeMillis());
@@ -39,6 +44,13 @@ public class Cliente extends Thread
 				s = new Socket(Ip, Puerto);
 				oos = new ObjectOutputStream(s.getOutputStream());
 				ois = new ObjectInputStream(s.getInputStream());
+				
+				//Mensaje que confirma conexion
+				if(primeraConexion) 
+				{
+					JOptionPane.showMessageDialog(null, "Cliente conectado");
+					primeraConexion = false;
+				}
 				
 				//obtiene los datos del sistema (memoria, porcentaje de uso y latencia)
 				long disponible = sys.getHardware().getMemory().getAvailable(); 
@@ -62,6 +74,7 @@ public class Cliente extends Thread
 		}
 		catch (Exception ex) 
 		{
+			JOptionPane.showMessageDialog(null, "No se conecto");
 			ex.printStackTrace();
 		}
 		
