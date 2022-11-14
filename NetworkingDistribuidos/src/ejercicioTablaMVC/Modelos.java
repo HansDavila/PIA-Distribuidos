@@ -89,17 +89,17 @@ public class Modelos
 		}else if(PC.getProcesador().contains("i5-8300H")) 
 		{
 			System.out.println("Este cliente contiene un Intel Core i5-8300H");
-			puntos += 300;
+			puntos += 400;
 			
 		}else if(PC.getProcesador().contains("Ryzen 5 3700U")) 
 		{
 			System.out.println("Este cliente contiene un Ryzen 5");
-			puntos += 250;
+			puntos += 350;
 			
 		}else if(PC.getProcesador().contains("i5-4310U")) 
 		{
-			System.out.println("Este cliente contiene un Ryzen 5");
-			puntos += 100;
+			System.out.println("Este cliente contiene un intel Core i5-4310U");
+			puntos += 300;
 		}
 		
 		
@@ -107,6 +107,7 @@ public class Modelos
 		elemento = PC.getVelocidad();
 		digits = elemento.replaceAll("[^0-9.]", "");
 		velocidad = Double.parseDouble(digits);
+		
 		puntos += (velocidad * 100);
 		
 		//Calificar N° de Nucleos
@@ -167,12 +168,18 @@ public class Modelos
 				//Se destruye la tabla y se vuelve a contruir
 				model.setRowCount(0);
 				
+				
+				//Calculo de puntos dinamicos
+				for(Computadora PC:Controlador.computadoras) 
+				{
+					PC.setPuntos(CalcularPuntosDinamicos(PC));
+				}
+				
+				//Se ordenan elementos de la tabla
 				Collections.sort(Controlador.computadoras);
 				
 				for(Computadora A:Controlador.computadoras)
 				{
-					A.setPuntos(CalcularPuntosDinamicos(A));
-					
 					model.addRow(
 								new Object[]{
 				                     A.getCliente(),

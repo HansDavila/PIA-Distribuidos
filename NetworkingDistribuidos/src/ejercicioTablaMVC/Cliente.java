@@ -48,7 +48,7 @@ public class Cliente extends Thread
 				//esto retarda todo el ciclo .8 segundos
 				MiCompu.setUsoCpu(sys.getHardware().getProcessor().getSystemCpuLoad(800));
 				
-				
+				//MiCompu.setPuntos(CalcularPuntosDinamicos(MiCompu));
 				
 				
 				
@@ -66,7 +66,31 @@ public class Cliente extends Thread
 		}
 		
 	}
-	
+	/*
+	int CalcularPuntosDinamicos(Computadora PC) 
+	{
+		int puntos = PC.getPuntosEstaticos();
+		double limCpu = 1000;
+		double limRam = 1000;
+		double cargaCpu = 0;
+		double cargaRam = 0;
+		String elemento;
+		
+		//Calificar craga de Cpu Dinamica
+		cargaCpu = (PC.getUsoCpu()* 100);
+		System.out.println("Carpa cpu --> " + cargaCpu);
+		puntos += (limCpu - (cargaCpu * 10));
+		System.out.println("puntos cpu --> " + (limCpu - (cargaCpu * 10)));
+		
+		//Calificar craga de Cpu Dinamica
+		cargaRam = PC.getUsoMemoria();
+		System.out.println("Carpa ram --> " + cargaRam);
+		puntos += (limRam - (cargaRam * 10));
+		System.out.println("puntos ram --> " + (limRam - (cargaRam * 10)));
+		
+		return puntos;
+	}
+	*/
 	
 	
 }

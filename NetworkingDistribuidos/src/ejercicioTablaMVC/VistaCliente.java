@@ -126,7 +126,7 @@ public class VistaCliente extends JFrame {
 		txtNombre.setFont(new Font("Arial", Font.PLAIN, 19));
 		txtNombre.setColumns(10);
 		txtNombre.setBounds(195, 124, 192, 24);
-		txtNombre.setText("Juan Fer");
+		txtNombre.setText(" ");
 		contentPane.add(txtNombre);
 	}
 }
