@@ -220,15 +220,11 @@ public class Modelos
 			
 			//Calificar craga de Cpu Dinamica
 			cargaCpu = (PC.getUsoCpu()* 100);
-			System.out.println("Carpa cpu --> " + cargaCpu);
 			puntos += (limCpu - (cargaCpu * 10));
-			System.out.println("puntos cpu --> " + (limCpu - (cargaCpu * 10)));
 			
 			//Calificar craga de Cpu Dinamica
 			cargaRam = PC.getUsoMemoria();
-			System.out.println("Carpa ram --> " + cargaRam);
 			puntos += (limRam - (cargaRam * 10));
-			System.out.println("puntos ram --> " + (limRam - (cargaRam * 10)));
 			
 			return puntos;
 		}

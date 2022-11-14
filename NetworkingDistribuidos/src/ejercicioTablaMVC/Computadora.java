@@ -44,6 +44,25 @@ public class Computadora implements Serializable, Comparable<Computadora>
 		
 	}
 	
+	//Metodo implementado de la Interfaz Comparable
+	@Override
+	public int compareTo(Computadora e) 
+	{
+		if(e.getPuntos() < puntos ) //Se indica menor puntuaje es peor 
+		{
+			return -1;
+			
+		}else if(e.getPuntos() > puntos)  //Se indica que mayor puntuaje es mejor
+		{
+			return 0;
+			
+		}else 
+		{
+			return 1;
+		}
+		
+	}
+	
 	//---------------------------Getters y Setters---------------------------
 	public int getPuntos() {
 		return puntos;
@@ -157,20 +176,7 @@ public class Computadora implements Serializable, Comparable<Computadora>
 				+ ", UsoMemoria=" + UsoMemoria + ", UsoCpu=" + UsoCpu + ", Latencia=" + Latencia + "]";
 	}
 
-	@Override
-	public int compareTo(Computadora e) {
-		if(e.getPuntos() < puntos ) 
-		{
-			return -1;
-		}else if(e.getPuntos() > puntos) 
-		{
-			return 0;
-		}else 
-		{
-			return 1;
-		}
-		
-	}
+	
 
 	
 }
