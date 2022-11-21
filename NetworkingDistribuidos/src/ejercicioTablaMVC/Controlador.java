@@ -17,6 +17,7 @@ public class Controlador implements ActionListener
 	Modelos M;
 	Server DS;
 	Cliente C;
+	static boolean bandera = false;
 	
 	//Esto es un metodo de modelos que se utiliza si se usa el servidor
 	//sirve para estar actualizando la tabla en la vista en un hilo
@@ -25,6 +26,7 @@ public class Controlador implements ActionListener
 	static ArrayList<Computadora> computadoras = new ArrayList<Computadora>();
 	static String nombre;
 	static String Direccion;
+	static String ActualServer;
 	
 	public Controlador(VistaCliente VC, VistaServidor VS, Modelos M)
 	{
@@ -46,6 +48,9 @@ public class Controlador implements ActionListener
 			}
 			
 			VS.setVisible(true);
+			ActualServer = Direccion;
+			VC.txtNombre.setText(nombre);
+			VC.txtIpServer.setText(Direccion);
 			escuchadores(true);
 		}
 		else
@@ -63,6 +68,7 @@ public class Controlador implements ActionListener
 			VC.setVisible(true);
 			VC.txtNombre.setText(nombre);
 			VC.txtIpServer.setText(Direccion);
+			
 			escuchadores(false);
 		}	
 		
@@ -94,6 +100,7 @@ public class Controlador implements ActionListener
 	{
 		if (e.getSource() == VS.btnIniciarServidor) 
 		{
+			bandera = true;
 			//Inicia el servidor en un hilo
 			DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
 			DS.start();
@@ -151,6 +158,8 @@ public class Controlador implements ActionListener
 			//Se cambian los txts de la vista
 			VS.txtEstado.setText("Apagado");
 			VS.txtSocket.setEditable(true);
+			
+			M.nuevoServidor();
 			
 			try {
 				Thread.sleep(1000);
@@ -230,7 +239,7 @@ public class Controlador implements ActionListener
 		public void run() 
 		{
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(10000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -238,6 +247,44 @@ public class Controlador implements ActionListener
 			
 			while(true) 
 			{
+				System.out.println("ACTUAL SERVER -> " + ActualServer);
+				System.out.println("ACTUAL SERVEG -> " + Direccion);
+				if(Direccion.equals(ActualServer)) 
+				{
+					if(bandera == true) {
+						System.out.println("Eres server");
+						C.MiCompu.setPuesto("Servidor");
+						
+						VS.setVisible(true);
+						VC.setVisible(false);
+					}else {
+						bandera = true;
+						C.MiCompu.setPuesto("Servidor");
+						C.SetPuesto("Servidor");
+						//Inicia el servidor en un hilo
+						DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
+						DS.start();
+						
+						//Se inicia el hilo que va a estar actualizando la tabla
+						MT = new modTabla(VS.model, true);
+						MT.start();
+						
+						//se limpia la tabla y se modifican los txts
+						VS.model.setRowCount(0);
+						VS.txtEstado.setText("Activo");
+						VS.txtSocket.setEditable(false);
+						
+					}
+					
+				}else 
+				{
+					System.out.println("NO ERES server");
+					C.MiCompu.setPuesto("Cliente");		
+					C.SetPuesto("Cliente");
+					VC.setVisible(true);
+				}
+	
+				//ESPERA
 				try {
 					Thread.sleep(2000);
 					
@@ -248,28 +295,22 @@ public class Controlador implements ActionListener
 				
 				if(C.MiCompu.getPuesto().equals("Servidor")) 
 				{
-					
+					System.out.println("CARGA ACTUAL CPU -> " + (C.MiCompu.getUsoCpu()*100));
 					if((C.MiCompu.getUsoCpu()*100) > 90) 
 					{
-						JOptionPane.showMessageDialog(VS, "APAGANDO EL SERVIDOR EN 10 SEGUNDOS");
-						//M.nuevoServidor();
+						
+						JOptionPane.showMessageDialog(VS, "ASIGNANDO SERVER");
+						M.nuevoServidor();
 						
 						try {
-							Thread.sleep(10);
+							Thread.sleep(10000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						
-						//deja de esperar conexiones y el hilo muere
-						DS.setContinuar(false);
 						
-						//deja de actualizar la tabla de la vista y el hilo muere
-						MT.setContinuar(false);
-						
-						//Se cambian los txts de la vista
-						VS.txtEstado.setText("Apagado");
-						VS.txtSocket.setEditable(true);
+					
 					}
 				}else if(C.MiCompu.getPuesto().equals("Cliente")) 
 				{

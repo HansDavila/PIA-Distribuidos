@@ -51,7 +51,7 @@ public class Server extends Thread
 			}
 			catch(Exception ex)
 			{
-				ex.printStackTrace();
+				//ex.printStackTrace();
 			}
 		}
 	}	
@@ -149,6 +149,7 @@ public class Server extends Thread
 			
 			//Le envio el array que tenemos
 			oos.writeObject(Controlador.computadoras);
+			oos.writeObject(Controlador.ActualServer);
 			
 		
 		}

@@ -30,6 +30,7 @@ public class Cliente extends Thread
 	
 	public void run()
 	{
+		int contador = 0;
 		SystemInfo sys = new SystemInfo();
 		Socket s = null;
 		ObjectInputStream ois = null;
@@ -79,24 +80,33 @@ public class Cliente extends Thread
 				oos.writeObject(MiCompu);
 				
 				Controlador.computadoras = (ArrayList<Computadora>) ois.readObject();
+				Controlador.ActualServer = (String) ois.readObject();
 				
 				if(ois != null) ois.close();
 				if(oos != null) oos.close();
 				if(s != null) s.close();
 				
-				System.out.println("hi");
+				
 			}
 		}
 		catch(ConnectException a)
 		{
 			//esta exception significa que no se establecio correctamente la conexion, asi que 
 			//se asigna que el estado es desconectado para que el controlador se de cuenta de esto
-			System.out.println("No se pudo establecer conexion con el servidor");
-			MiCompu.setEstado("Desconectado");
-			
-			if(MiCompu.getPuesto().equals("Cliente"))
-			JOptionPane.showMessageDialog(null, "No se pudo establecer conexion con el servidor");
-			
+			if(contador < 3) 
+			{
+				System.out.println("No se pudo establecer conexion con el servidor");
+				
+				Ip = Controlador.ActualServer;
+				System.out.println("ACTUAL SERVER IP -> " + Ip);
+				contador++;
+			}else 
+			{
+				MiCompu.setEstado("Desconectado");
+				
+				if(MiCompu.getPuesto().equals("Cliente"))
+				JOptionPane.showMessageDialog(null, "No se pudo establecer conexion con el servidor");
+			}		
 		}
 		catch(EOFException terminar)
 		{
@@ -116,6 +126,11 @@ public class Cliente extends Thread
 			ex.printStackTrace();
 		}
 		
+	}
+	
+	public void SetPuesto(String puesto) 
+	{
+		Puesto = puesto;
 	}
 	
 	

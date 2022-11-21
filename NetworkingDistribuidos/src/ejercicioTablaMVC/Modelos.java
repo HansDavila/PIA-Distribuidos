@@ -143,15 +143,35 @@ public class Modelos
 	public void nuevoServidor() 
 	{
 		int max = 0;
-		int indice;
+		int indiceNuevo = 0;
+		int indiceViejo = 0;
 		for(Computadora cliente: Controlador.computadoras) 
 		{
+			if(cliente.getPuesto().equals("Servidor")) 
+			{
+				indiceViejo = Controlador.computadoras.indexOf(cliente);
+			}
 			if(cliente.getPuntos() > max) {
 				max = cliente.getPuntos();
-				indice = Controlador.computadoras.indexOf(cliente);
+				indiceNuevo = Controlador.computadoras.indexOf(cliente);
 			}
 		}
 		
+		Computadora nuevoServer = Controlador.computadoras.get(indiceNuevo);
+		Computadora AntiguoServer = Controlador.computadoras.get(indiceViejo);
+		nuevoServer.setPuesto("Servidor");
+		AntiguoServer.setPuesto("Cliente");
+		
+		Controlador.computadoras.set(indiceNuevo, nuevoServer);
+		Controlador.computadoras.set(indiceViejo, AntiguoServer);
+		Controlador.ActualServer = nuevoServer.getIP();
+		Controlador.ActualServer = Controlador.ActualServer.replace("/", "");
+		
+	}
+	
+	public String getActualServer() 
+	{
+		return Controlador.ActualServer;
 	}
 	
 	
