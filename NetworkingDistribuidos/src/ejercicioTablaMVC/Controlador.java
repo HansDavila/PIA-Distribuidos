@@ -70,6 +70,11 @@ public class Controlador implements ActionListener
 	{
 		if (e.getSource() == VS.btnIniciarServidor) 
 		{
+			
+			for(Computadora Cliente: Controlador.computadoras) 
+			{
+				System.out.println("CLIENTE ->" + Cliente.getCliente() + " ESTADO -> " + Cliente.getEstado());
+			}
 			//Inicia el servidor en un hilo
 			DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
 			DS.start();
@@ -90,12 +95,29 @@ public class Controlador implements ActionListener
 		{
 			//deja de esperar conexiones y el hilo muere
 			DS.setContinuar(false);
+			
 			//deja de actualizar la tabla de la vista y el hilo muere
 			MT.setContinuar(false);
 			
 			//Se cambian los txts de la vista
 			VS.txtEstado.setText("Apagado");
 			VS.txtSocket.setEditable(true);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			for(Computadora Cliente: Controlador.computadoras) 
+			{
+				int indice = Controlador.computadoras.indexOf(Cliente);
+				Cliente.setEstado("Desconectado");
+				Controlador.computadoras.set(indice, Cliente);
+				System.out.println("Modificando tabla");
+			}
+			
+			
 			
 			
 		}
@@ -145,6 +167,7 @@ public class Controlador implements ActionListener
 	{
 		Cliente C;
 		VistaCliente VC;
+		boolean band = false;
 		public EscuchaClientes(Cliente C, VistaCliente VC) 
 		{
 			this.C = C;
@@ -163,7 +186,14 @@ public class Controlador implements ActionListener
 				
 				if(C.MiCompu.getEstado() == "Desconectado") 
 				{
-					VC.txtEstado.setText("Desconectado");
+					if(band == false) 
+					{
+						VC.txtEstado.setText("Desconectado");
+						band = true;
+					}
+				}else if(C.MiCompu.getEstado() == "Conectado") 
+				{
+					band = false;
 				}
 			}
 		}
