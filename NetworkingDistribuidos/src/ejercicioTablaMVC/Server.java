@@ -12,6 +12,9 @@ public class Server extends Thread
 	int Socket;
 	boolean Continuar;
 	
+	Socket s = null;		
+	ServerSocket ss = null;
+	
 	public Server(int Socket, boolean Continuar)
 	{
 		this.Socket = Socket;
@@ -20,9 +23,7 @@ public class Server extends Thread
 	
 	public void run()
 	{
-		Socket s = null;		
 		
-		ServerSocket ss = null;
 		
 		try {
 			ss = new ServerSocket(Socket);
@@ -60,6 +61,15 @@ public class Server extends Thread
 	}
 
 	public void setContinuar(boolean continuar) {
+		if(continuar == false) 
+		{
+			try {
+				ss.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Continuar = continuar;
 	}
 

@@ -97,6 +97,7 @@ public class Controlador implements ActionListener
 			VS.txtEstado.setText("Apagado");
 			VS.txtSocket.setEditable(true);
 			
+			
 		}
 		else if( e.getSource() == VC.btnConectarse)
 		{
@@ -117,6 +118,9 @@ public class Controlador implements ActionListener
 			//iniciar hilo cliente
 			C.start();
 			
+			EscuchaClientes E = new EscuchaClientes(C, VC);
+			E.start();
+			
 		}
 		else if( e.getSource() == VC.btnDesconectarse)
 		{
@@ -130,10 +134,38 @@ public class Controlador implements ActionListener
 			VC.txtIpServer.setEditable(true);
 			
 		}
-		
 		else if( e.getSource() == VC.btnSalir)
 		{
 			System.exit(0);
+		}
+		
+	}
+	
+	static class EscuchaClientes extends Thread
+	{
+		Cliente C;
+		VistaCliente VC;
+		public EscuchaClientes(Cliente C, VistaCliente VC) 
+		{
+			this.C = C;
+			this.VC = VC;
+		}
+		public void run() 
+		{
+			while(true) 
+			{
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if(C.MiCompu.getEstado() == "Desconectado") 
+				{
+					VC.txtEstado.setText("Desconectado");
+				}
+			}
 		}
 	}
 	

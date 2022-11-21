@@ -211,7 +211,7 @@ public class Modelos
 		int CalcularPuntosDinamicos(Computadora PC) 
 		{
 			int puntos = PC.getPuntosEstaticos();
-			System.out.println("ESTATICOS -> " + puntos);
+			//System.out.println("ESTATICOS -> " + puntos);
 			double limCpu = 1000;
 			double limRam = 1000;
 			double cargaCpu = 0;
