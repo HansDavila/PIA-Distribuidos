@@ -137,6 +137,9 @@ public class Server extends Thread
 				Controlador.computadoras.set(seEncontro, C);
 			}
 			
+			//Le envio el array que tenemos
+			oos.writeObject(Controlador.computadoras);
+			
 		
 		}
 		catch(Exception ex)

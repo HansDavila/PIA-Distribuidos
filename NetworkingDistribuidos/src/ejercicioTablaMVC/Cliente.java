@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -68,6 +69,8 @@ public class Cliente extends Thread
 				
 				
 				oos.writeObject(MiCompu);
+				
+				Controlador.computadoras = (ArrayList<Computadora>) ois.readObject();
 				
 				if(ois != null) ois.close();
 				if(oos != null) oos.close();
