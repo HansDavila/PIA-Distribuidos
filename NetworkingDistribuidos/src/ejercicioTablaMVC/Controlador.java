@@ -130,6 +130,7 @@ public class Controlador implements ActionListener
 			VC.txtIpServer.setEditable(true);
 			
 		}
+		
 		else if( e.getSource() == VC.btnSalir)
 		{
 			System.exit(0);

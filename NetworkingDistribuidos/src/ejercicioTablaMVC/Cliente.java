@@ -1,9 +1,12 @@
 package ejercicioTablaMVC;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 
 import javax.swing.JOptionPane;
 
@@ -71,6 +74,26 @@ public class Cliente extends Thread
 				if(s != null) s.close();
 				
 			}
+		}
+		catch(ConnectException a)
+		{
+			//esta exception significa que no se establecio correctamente la conexion, asi que 
+			//se asigna que el estado es desconectado para que el controlador se de cuenta de esto
+			System.out.println("No se pudo establecer conexion con el servidor");
+			JOptionPane.showMessageDialog(null, "No se pudo establecer conexion con el servidor");
+			MiCompu.setEstado("Desconectado");
+		}
+		catch(EOFException terminar)
+		{
+			System.out.println("Se presiono voluntariamente el boton de terminar el servidor");
+			JOptionPane.showMessageDialog(null, "Se presiono voluntariamente el boton de terminar el servidor");
+			MiCompu.setEstado("Desconectado");
+		}
+		catch(SocketException sock)
+		{
+			System.out.println("Se cerro la ventana del servidor mientras estaba activo");
+			JOptionPane.showMessageDialog(null, "Se cerro la ventana del servidor mientras estaba activo\"");
+			MiCompu.setEstado("Desconectado");
 		}
 		catch (Exception ex) 
 		{
