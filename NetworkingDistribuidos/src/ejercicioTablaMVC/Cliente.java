@@ -18,12 +18,14 @@ public class Cliente extends Thread
 	Computadora MiCompu;
 	String Ip; //IP donde esta el servidor
 	int Puerto;
+	String Puesto;
 	
-	public Cliente(Computadora MiCompu, String Ip, int Puerto)
+	public Cliente(Computadora MiCompu, String Ip, int Puerto, String puesto)
 	{
 		this.MiCompu = MiCompu;
 		this.Ip = Ip;
 		this.Puerto = Puerto;
+		this.Puesto = puesto;
 	}
 	
 	public void run()
@@ -49,12 +51,16 @@ public class Cliente extends Thread
 				oos = new ObjectOutputStream(s.getOutputStream());
 				ois = new ObjectInputStream(s.getInputStream());
 				
-				//Mensaje que confirma conexion
-				if(primeraConexion) 
+				if(Puesto.equals("Cliente")) 
 				{
-					JOptionPane.showMessageDialog(null, "Cliente conectado");
-					primeraConexion = false;
+					//Mensaje que confirma conexion
+					if(primeraConexion) 
+					{
+						JOptionPane.showMessageDialog(null, "Cliente conectado");
+						primeraConexion = false;
+					}
 				}
+				
 				
 				//obtiene los datos del sistema (memoria, porcentaje de uso y latencia)
 				long disponible = sys.getHardware().getMemory().getAvailable(); 
@@ -63,6 +69,8 @@ public class Cliente extends Thread
 				
 				//esto retarda todo el ciclo .8 segundos
 				MiCompu.setUsoCpu(sys.getHardware().getProcessor().getSystemCpuLoad(800));
+				
+				MiCompu.setPuesto(Puesto);
 				
 			
 				
@@ -76,6 +84,7 @@ public class Cliente extends Thread
 				if(oos != null) oos.close();
 				if(s != null) s.close();
 				
+				System.out.println("hi");
 			}
 		}
 		catch(ConnectException a)
@@ -83,8 +92,11 @@ public class Cliente extends Thread
 			//esta exception significa que no se establecio correctamente la conexion, asi que 
 			//se asigna que el estado es desconectado para que el controlador se de cuenta de esto
 			System.out.println("No se pudo establecer conexion con el servidor");
-			JOptionPane.showMessageDialog(null, "No se pudo establecer conexion con el servidor");
 			MiCompu.setEstado("Desconectado");
+			
+			if(MiCompu.getPuesto().equals("Cliente"))
+			JOptionPane.showMessageDialog(null, "No se pudo establecer conexion con el servidor");
+			
 		}
 		catch(EOFException terminar)
 		{

@@ -14,6 +14,9 @@ public class Modelos
 	
 	boolean desicion()
 	{
+		Controlador.nombre = JOptionPane.showInputDialog("Ingrese Nombre");
+		Controlador.Direccion = JOptionPane.showInputDialog("Ingrese la direccion ip del Servidor");
+		
 		String[] botones = {"Servidor", "Cliente"};
 		int ventana = JOptionPane.showOptionDialog(null, 
 						"Que desea utilizar?:", 
@@ -94,7 +97,7 @@ public class Modelos
 		}else if(PC.getProcesador().contains("Ryzen 7 3700U")) 
 		{
 			System.out.println("Este cliente contiene un Ryzen 7");
-			puntos += 350;
+			puntos += 300;
 			
 		}else if(PC.getProcesador().contains("i5-4310U")) 
 		{
@@ -183,6 +186,7 @@ public class Modelos
 					model.addRow(
 								new Object[]{
 				                     A.getCliente(),
+				                     A.getPuesto(),
 				                     A.getIP(),
 				                     A.getEstado(),
 				                     A.getProcesador(),
@@ -194,6 +198,7 @@ public class Modelos
 				                     A.getUsoMemoria()+" %",
 				                     A.getLatencia(),
 				                     A.getPuntos()
+				                     
 				              });
 					
 				}

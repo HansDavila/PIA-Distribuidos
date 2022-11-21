@@ -36,7 +36,7 @@ public class VistaServidor extends JFrame {
 				{
 					crearGUI();
 					setResizable(false);
-					setVisible(true);
+					setVisible(false);
 				} 
 				catch (Exception e) 
 				{
@@ -74,20 +74,21 @@ public class VistaServidor extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Cliente", "IP", "Estado", "Procesador", "Velocidad", "Nucleos", "Capacidad DD", "Version S.O.", "Uso CPU", "Uso Memoria", "Latencia", "Puntuación"
+				"Cliente", "Puesto", "IP", "Estado", "Procesador", "Velocidad", "Nucleos", "Capacidad DD", "Version S.O.", "Uso CPU", "Uso Memoria", "Latencia", "Puntuación"
 			}
 		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(73);
-		table.getColumnModel().getColumn(1).setPreferredWidth(80);
-		table.getColumnModel().getColumn(2).setPreferredWidth(85);
-		table.getColumnModel().getColumn(3).setPreferredWidth(251);
-		table.getColumnModel().getColumn(4).setPreferredWidth(77);
-		table.getColumnModel().getColumn(5).setPreferredWidth(74);
-		table.getColumnModel().getColumn(6).setPreferredWidth(113);
-		table.getColumnModel().getColumn(7).setPreferredWidth(180);
-		table.getColumnModel().getColumn(8).setPreferredWidth(86);
-		table.getColumnModel().getColumn(9).setPreferredWidth(106);
-		table.getColumnModel().getColumn(10).setPreferredWidth(78);
+		table.getColumnModel().getColumn(1).setPreferredWidth(73);
+		table.getColumnModel().getColumn(2).setPreferredWidth(80);
+		table.getColumnModel().getColumn(3).setPreferredWidth(85);
+		table.getColumnModel().getColumn(4).setPreferredWidth(251);
+		table.getColumnModel().getColumn(5).setPreferredWidth(77);
+		table.getColumnModel().getColumn(6).setPreferredWidth(74);
+		table.getColumnModel().getColumn(7).setPreferredWidth(113);
+		table.getColumnModel().getColumn(8).setPreferredWidth(180);
+		table.getColumnModel().getColumn(9).setPreferredWidth(86);
+		table.getColumnModel().getColumn(10).setPreferredWidth(106);
+		table.getColumnModel().getColumn(11).setPreferredWidth(78);
 		
 		table.setRowHeight(30);
 		model = (DefaultTableModel) table.getModel();

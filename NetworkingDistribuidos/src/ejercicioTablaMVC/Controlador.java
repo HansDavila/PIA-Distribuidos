@@ -23,6 +23,8 @@ public class Controlador implements ActionListener
 	modTabla MT;
 	
 	static ArrayList<Computadora> computadoras = new ArrayList<Computadora>();
+	static String nombre;
+	static String Direccion;
 	
 	public Controlador(VistaCliente VC, VistaServidor VS, Modelos M)
 	{
@@ -34,11 +36,33 @@ public class Controlador implements ActionListener
 		{
 			//se lanza servidor
 			this.VS.lanzarGUI();
+			this.VC.lanzarGUI();
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			VS.setVisible(true);
 			escuchadores(true);
 		}
 		else
 		{	//se lanza cliente
 			this.VC.lanzarGUI();
+			this.VS.lanzarGUI();
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			VC.setVisible(true);
+			VC.txtNombre.setText(nombre);
+			VC.txtIpServer.setText(Direccion);
 			escuchadores(false);
 		}	
 		
@@ -70,11 +94,6 @@ public class Controlador implements ActionListener
 	{
 		if (e.getSource() == VS.btnIniciarServidor) 
 		{
-			
-			for(Computadora Cliente: Controlador.computadoras) 
-			{
-				System.out.println("CLIENTE ->" + Cliente.getCliente() + " ESTADO -> " + Cliente.getEstado());
-			}
 			//Inicia el servidor en un hilo
 			DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
 			DS.start();
@@ -87,6 +106,36 @@ public class Controlador implements ActionListener
 			VS.model.setRowCount(0);
 			VS.txtEstado.setText("Activo");
 			VS.txtSocket.setEditable(false);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			//SE CREA CLIENTE DEL SERVER
+			//Rellenar objeto computadora
+			Computadora MiCompu = M.inicializarComputadora();
+			MiCompu.setCliente(nombre);
+			
+			MiCompu.setEstado("Conectado");
+			
+			//cambia los txts de la vista
+			VC.txtEstado.setText("Conectado");
+			VC.txtSocket.setEditable(false);
+			VC.txtIpServer.setEditable(false);
+			
+			
+			//CREAR CLIENTE
+			C = new Cliente(MiCompu, Direccion, Integer.parseInt(VC.txtSocket.getText()), "Servidor");
+			
+			//iniciar hilo cliente
+			C.start();
+			
+			//Se añade el escuchador del cliente servidor
+			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS);
+			E.start();
 			
 			//instancia en una linea... interesante...
 			//(new modTabla(VS.model, true)).start();
@@ -115,11 +164,7 @@ public class Controlador implements ActionListener
 				Cliente.setEstado("Desconectado");
 				Controlador.computadoras.set(indice, Cliente);
 				System.out.println("Modificando tabla");
-			}
-			
-			
-			
-			
+			}	
 		}
 		else if( e.getSource() == VC.btnConectarse)
 		{
@@ -135,12 +180,13 @@ public class Controlador implements ActionListener
 			
 			
 			//CREAR CLIENTE
-			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()));
+			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()), "Cliente");
 			
 			//iniciar hilo cliente
 			C.start();
 			
-			EscuchaClientes E = new EscuchaClientes(C, VC);
+			
+			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS);
 			E.start();
 			
 		}
@@ -167,34 +213,76 @@ public class Controlador implements ActionListener
 	{
 		Cliente C;
 		VistaCliente VC;
+		VistaServidor VS;
+		Server DS;
+		modTabla MT;
 		boolean band = false;
-		public EscuchaClientes(Cliente C, VistaCliente VC) 
+		public EscuchaClientes(Cliente C, VistaCliente VC, Server DS, modTabla MT, VistaServidor VS ) 
 		{
 			this.C = C;
 			this.VC = VC;
+			this.DS = DS;
+			this.MT = MT;
+			this.VS = VS;
 		}
 		public void run() 
 		{
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			while(true) 
 			{
 				try {
 					Thread.sleep(2000);
+					
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-				if(C.MiCompu.getEstado() == "Desconectado") 
+				if(C.MiCompu.getPuesto().equals("Servidor")) 
 				{
-					if(band == false) 
+					
+					if((C.MiCompu.getUsoCpu()*100) > 90) 
 					{
-						VC.txtEstado.setText("Desconectado");
-						band = true;
+						JOptionPane.showMessageDialog(VS, "APAGANDO EL SERVIDOR EN 10 SEGUNDOS");
+						
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						//deja de esperar conexiones y el hilo muere
+						DS.setContinuar(false);
+						
+						//deja de actualizar la tabla de la vista y el hilo muere
+						MT.setContinuar(false);
+						
+						//Se cambian los txts de la vista
+						VS.txtEstado.setText("Apagado");
+						VS.txtSocket.setEditable(true);
 					}
-				}else if(C.MiCompu.getEstado() == "Conectado") 
+				}else if(C.MiCompu.getPuesto().equals("Cliente")) 
 				{
-					band = false;
+					if(C.MiCompu.getEstado() == "Desconectado") 
+					{
+						if(band == false) 
+						{
+							VC.txtEstado.setText("Desconectado");
+							band = true;
+						}
+					}else if(C.MiCompu.getEstado() == "Conectado") 
+					{
+						band = false;
+					}
 				}
+				
 			}
 		}
 	}

@@ -10,6 +10,9 @@ public class Computadora implements Serializable, Comparable<Computadora>
 	String Estado;
 	String Procesador;
 	String Velocidad;
+	String puesto;
+	
+
 	int Nucleos;
 	String Capacidad;
 	String SO;
@@ -22,7 +25,7 @@ public class Computadora implements Serializable, Comparable<Computadora>
 	
 	//Constructor
 	public Computadora(String cliente, String iP, String estado, String procesador, String velocidad, int nucleos,
-			String capacidad, String sO, float UsoMemoria, double UsoCpu, long Latencia, int puntos) 
+			String capacidad, String sO, float UsoMemoria, double UsoCpu, long Latencia, int puntos, String puesto) 
 	{
 		this.Cliente = cliente;
 		this.IP = iP;
@@ -36,6 +39,7 @@ public class Computadora implements Serializable, Comparable<Computadora>
 		this.UsoCpu = UsoCpu;
 		this.Latencia = Latencia;
 		this.puntos = puntos;
+		this.puesto = puesto;
 	}
 	
 	//Constructor Generico
@@ -70,6 +74,14 @@ public class Computadora implements Serializable, Comparable<Computadora>
 
 	public void setPuntos(int puntos) {
 		this.puntos = puntos;
+	}
+	
+	public String getPuesto() {
+		return puesto;
+	}
+
+	public void setPuesto(String puesto) {
+		this.puesto = puesto;
 	}
 	
 	public String getCliente() {
