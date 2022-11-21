@@ -134,7 +134,7 @@ public class Controlador implements ActionListener
 			C.start();
 			
 			//Se añade el escuchador del cliente servidor
-			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS);
+			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS, M);
 			E.start();
 			
 			//instancia en una linea... interesante...
@@ -186,7 +186,7 @@ public class Controlador implements ActionListener
 			C.start();
 			
 			
-			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS);
+			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS, M);
 			E.start();
 			
 		}
@@ -216,14 +216,16 @@ public class Controlador implements ActionListener
 		VistaServidor VS;
 		Server DS;
 		modTabla MT;
+		Modelos M;
 		boolean band = false;
-		public EscuchaClientes(Cliente C, VistaCliente VC, Server DS, modTabla MT, VistaServidor VS ) 
+		public EscuchaClientes(Cliente C, VistaCliente VC, Server DS, modTabla MT, VistaServidor VS, Modelos M ) 
 		{
 			this.C = C;
 			this.VC = VC;
 			this.DS = DS;
 			this.MT = MT;
 			this.VS = VS;
+			this.M = M;
 		}
 		public void run() 
 		{
@@ -250,6 +252,7 @@ public class Controlador implements ActionListener
 					if((C.MiCompu.getUsoCpu()*100) > 90) 
 					{
 						JOptionPane.showMessageDialog(VS, "APAGANDO EL SERVIDOR EN 10 SEGUNDOS");
+						//M.nuevoServidor();
 						
 						try {
 							Thread.sleep(10);

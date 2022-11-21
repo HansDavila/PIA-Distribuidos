@@ -140,6 +140,20 @@ public class Modelos
 		return puntos;
 	}
 	
+	public void nuevoServidor() 
+	{
+		int max = 0;
+		int indice;
+		for(Computadora cliente: Controlador.computadoras) 
+		{
+			if(cliente.getPuntos() > max) {
+				max = cliente.getPuntos();
+				indice = Controlador.computadoras.indexOf(cliente);
+			}
+		}
+		
+	}
+	
 	
 	//---------------------------hilo para actualizar la tabla---------------------------
 	static class modTabla extends Thread
@@ -216,22 +230,31 @@ public class Modelos
 		int CalcularPuntosDinamicos(Computadora PC) 
 		{
 			int puntos = PC.getPuntosEstaticos();
-			//System.out.println("ESTATICOS -> " + puntos);
-			double limCpu = 1000;
-			double limRam = 1000;
-			double cargaCpu = 0;
-			double cargaRam = 0;
+			if(PC.getEstado().equals("Desconectado")) 
+			{
+				puntos = 0;
+			}else 
+			{
+				//System.out.println("ESTATICOS -> " + puntos);
+				double limCpu = 1000;
+				double limRam = 1000;
+				double cargaCpu = 0;
+				double cargaRam = 0;
+				
+				
+				//Calificar craga de Cpu Dinamica
+				cargaCpu = (PC.getUsoCpu()* 100);
+				puntos += (limCpu - (cargaCpu * 10));
+				
+				//Calificar craga de Cpu Dinamica
+				cargaRam = PC.getUsoMemoria();
+				puntos += (limRam - (cargaRam * 10));
+			}
 			
-			
-			//Calificar craga de Cpu Dinamica
-			cargaCpu = (PC.getUsoCpu()* 100);
-			puntos += (limCpu - (cargaCpu * 10));
-			
-			//Calificar craga de Cpu Dinamica
-			cargaRam = PC.getUsoMemoria();
-			puntos += (limRam - (cargaRam * 10));
 			
 			return puntos;
 		}
+		
+		
 	}
 }
