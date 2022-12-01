@@ -9,8 +9,22 @@ import javax.swing.table.DefaultTableModel;
 import oshi.SystemInfo;
 import oshi.hardware.HWDiskStore;
 
+import java.math.BigDecimal;
+
+import javax.swing.JOptionPane;
+
+import fr.bmartel.speedtest.SpeedTestReport;
+import fr.bmartel.speedtest.SpeedTestSocket;
+import fr.bmartel.speedtest.inter.ISpeedTestListener;
+import fr.bmartel.speedtest.model.SpeedTestError;
+
 public class Modelos 
 {
+	static Double valor = 0.0;
+	
+	public static void setValor(Double valor) {
+		Modelos.valor = valor;
+	}
 	
 	boolean desicion()
 	{
@@ -175,12 +189,15 @@ public class Modelos
 	}
 	
 	
+	
+	
 	//---------------------------hilo para actualizar la tabla---------------------------
 	static class modTabla extends Thread
 	{
 		//el de continuar es para checar si queremos seguir actualizando la tabla
 		boolean continuar;
 		DefaultTableModel model;
+		static Double speed = 0.0; 
 		
 		public modTabla(DefaultTableModel model, boolean continuar)
 		{
@@ -210,6 +227,9 @@ public class Modelos
 				for(Computadora PC:Controlador.computadoras) 
 				{
 					PC.setPuntos(CalcularPuntosDinamicos(PC));
+					
+					System.out.println("LATENCIA -> " + valor);
+					PC.setLatencia(valor);
 				}
 				
 				//Se ordenan elementos de la tabla
@@ -274,6 +294,60 @@ public class Modelos
 			
 			return puntos;
 		}
+		
+		void  testVelocidadDescarga(Computadora PC)
+		{
+			
+			SpeedTestSocket speedTestSocket = new SpeedTestSocket();
+			speedTestSocket.addSpeedTestListener(new ISpeedTestListener()
+			
+			
+					{
+					@Override
+				    public void onCompletion(SpeedTestReport report) {
+				        // called when download/upload is complete
+				        System.out.println("[COMPLETED] rate in bit/s   : " + report.getTransferRateBit());
+				    }
+
+				    @Override
+				    public void onError(SpeedTestError speedTestError, String errorMessage) {
+				    	JOptionPane.showMessageDialog(null, "Hubo un error en la prueba de la velocidad de descarga");
+				    }
+
+				    @Override
+				    public void onProgress(float percent, SpeedTestReport report) {
+				    	BigDecimal speed = report.getTransferRateBit();
+				    	BigDecimal speedMbps = speed.divide(new BigDecimal(1000000));
+				    	
+				    	//final Double anchoBanda = speedMbps.doubleValue();
+				    	
+				    	valor = speedMbps.doubleValue();
+				    	
+				  
+				    	
+				        // called to notify download/upload progress
+				        System.out.println("[PROGRESS] progress : " + percent + "%");
+				        System.out.println("[PROGRESS] rate in Mbps   : " + speedMbps);
+				        System.out.println(PC.getLatencia());
+				        
+				        
+				    }
+					});
+			
+			
+			//Inicia descarga, tambien se puede con archivos de 100 MB
+			//speedTestSocket.startDownload("https://speed.hetzner.de/100MB.bin",1500);
+			speedTestSocket.startDownload("https://speed.hetzner.de/1GB.bin",1500);
+			//JOptionPane.showMessageDialog(null, anchoBanda);
+			
+			
+			
+			
+		}
+		
+	
+		
+		
 		
 		
 	}

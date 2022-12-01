@@ -46,7 +46,7 @@ public class Cliente extends Thread
 				
 				//la latencia es la primer cosa que se hace porque al hacer el socket, es cuando el server
 				//recibe la senal de un paquete
-				MiCompu.setLatencia(System.currentTimeMillis());
+				//MiCompu.setLatencia(System.currentTimeMillis());
 				
 				s = new Socket(Ip, Puerto);
 				oos = new ObjectOutputStream(s.getOutputStream());
@@ -81,6 +81,7 @@ public class Cliente extends Thread
 				
 				Controlador.computadoras = (ArrayList<Computadora>) ois.readObject();
 				Controlador.ActualServer = (String) ois.readObject();
+				System.out.println("IP DE DESTINO --> " + Ip);
 				
 				if(ois != null) ois.close();
 				if(oos != null) oos.close();
@@ -131,6 +132,10 @@ public class Cliente extends Thread
 	public void SetPuesto(String puesto) 
 	{
 		Puesto = puesto;
+	}
+	
+	public void setIp(String Ip) {
+		this.Ip = Ip;
 	}
 	
 	

@@ -10,6 +10,12 @@
 		    <artifactId>oshi-core</artifactId>
 		    <version>6.2.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/fr.bmartel/jspeedtest -->
+		<dependency>
+		    <groupId>fr.bmartel</groupId>
+		    <artifactId>jspeedtest</artifactId>
+		    <version>1.32.1</version>
+		</dependency>
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>

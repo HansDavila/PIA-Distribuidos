@@ -133,7 +133,7 @@ public class Server extends Thread
 			C.setIP(""+s.getInetAddress());
 			
 			//Se calcula y asigna el tiempo que tardo en llegar el paquete
-			C.setLatencia(horaLlegada - C.getLatencia());
+			//C.setLatencia(horaLlegada - C.getLatencia());
 			
 			//La computadora recibida ya se encontraba en el arraylist?
 			int seEncontro = yaSeEncuentra(C.getIP());

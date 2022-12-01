@@ -12,16 +12,22 @@ import ejercicioTablaMVC.Modelos.modTabla;
 
 public class Controlador implements ActionListener
 {
-	VistaCliente VC;
-	VistaServidor VS;
-	Modelos M;
-	Server DS;
-	Cliente C;
+	static VistaCliente VC;
+	static VistaServidor VS;
+	static Modelos M;
+	static Server DS;
+	static Cliente C;
+	static EscuchaClientes E;
+	
 	static boolean bandera = false;
+	boolean activarEscuchador = true;
+	
+	
+	static boolean cambioServer = false;
 	
 	//Esto es un metodo de modelos que se utiliza si se usa el servidor
 	//sirve para estar actualizando la tabla en la vista en un hilo
-	modTabla MT;
+	static modTabla MT;
 	
 	static ArrayList<Computadora> computadoras = new ArrayList<Computadora>();
 	static String nombre;
@@ -64,7 +70,7 @@ public class Controlador implements ActionListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			cambioServer = true;
 			VC.setVisible(true);
 			VC.txtNombre.setText(nombre);
 			VC.txtIpServer.setText(Direccion);
@@ -86,12 +92,18 @@ public class Controlador implements ActionListener
 		{
 			VS.btnIniciarServidor.addActionListener(this);
 			VS.btnTerminarServidor.addActionListener(this);
+			VC.btnConectarse.addActionListener(this);
+			VC.btnDesconectarse.addActionListener(this);
+			VC.btnSalir.addActionListener(this);
 		}
 		else
 		{
 			VC.btnConectarse.addActionListener(this);
 			VC.btnDesconectarse.addActionListener(this);
 			VC.btnSalir.addActionListener(this);
+			VS.btnIniciarServidor.addActionListener(this);
+			VS.btnTerminarServidor.addActionListener(this);
+
 		}
 	}
 
@@ -134,26 +146,38 @@ public class Controlador implements ActionListener
 			VC.txtIpServer.setEditable(false);
 			
 			
-			//CREAR CLIENTE
+			//CREAR CLIENTE de parte del servidor
 			C = new Cliente(MiCompu, Direccion, Integer.parseInt(VC.txtSocket.getText()), "Servidor");
 			
 			//iniciar hilo cliente
 			C.start();
 			
-			//Se añade el escuchador del cliente servidor
-			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS, M);
-			E.start();
+			if(activarEscuchador) {
+				//Se añade el escuchador del cliente servidor
+				E = new EscuchaClientes(C, VC, DS, MT, VS, M);
+				E.start();
+				activarEscuchador = false;
+			}else {
+				E.update(C, VC, DS, MT, VS, M);
+			}
+			
 			
 			//instancia en una linea... interesante...
 			//(new modTabla(VS.model, true)).start();
 		}
 		else if( e.getSource() == VS.btnTerminarServidor)
 		{
-			//deja de esperar conexiones y el hilo muere
-			DS.setContinuar(false);
+
+			C.MiCompu.setEstado("Desconectado");
 			
-			//deja de actualizar la tabla de la vista y el hilo muere
-			MT.setContinuar(false);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			
 			
 			//Se cambian los txts de la vista
 			VS.txtEstado.setText("Apagado");
@@ -174,6 +198,18 @@ public class Controlador implements ActionListener
 				Controlador.computadoras.set(indice, Cliente);
 				System.out.println("Modificando tabla");
 			}	
+			
+			//deja de esperar conexiones y el hilo muere
+			DS.setContinuar(false);
+			
+			//deja de actualizar la tabla de la vista y el hilo muere
+			MT.setContinuar(false);
+			
+			
+			
+			
+			
+			
 		}
 		else if( e.getSource() == VC.btnConectarse)
 		{
@@ -194,9 +230,12 @@ public class Controlador implements ActionListener
 			//iniciar hilo cliente
 			C.start();
 			
+			if(activarEscuchador) {
+				EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS, M);
+				E.start();
+				activarEscuchador = false;
+			}
 			
-			EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS, M);
-			E.start();
 			
 		}
 		else if( e.getSource() == VC.btnDesconectarse)
@@ -218,24 +257,29 @@ public class Controlador implements ActionListener
 		
 	}
 	
-	static class EscuchaClientes extends Thread
+	static class EscuchaClientes extends Thread 
 	{
-		Cliente C;
-		VistaCliente VC;
-		VistaServidor VS;
-		Server DS;
-		modTabla MT;
-		Modelos M;
+		
 		boolean band = false;
+		boolean estado;
 		public EscuchaClientes(Cliente C, VistaCliente VC, Server DS, modTabla MT, VistaServidor VS, Modelos M ) 
 		{
-			this.C = C;
-			this.VC = VC;
-			this.DS = DS;
-			this.MT = MT;
-			this.VS = VS;
-			this.M = M;
+			
+			estado = true;
 		}
+		
+		public void update(Cliente C, VistaCliente VC, Server DS, modTabla MT, VistaServidor VS, Modelos M ) {
+			
+		}
+		
+		
+		
+
+		
+		public void setEstado(boolean estado) {
+			this.estado = estado;
+		}
+		
 		public void run() 
 		{
 			try {
@@ -257,17 +301,52 @@ public class Controlador implements ActionListener
 						
 						VS.setVisible(true);
 						VC.setVisible(false);
+						
+						if(cambioServer) {
+							System.out.println("EN CAMBIO SERVER");
+							try {
+								Thread.sleep(5000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							//Inicia el servidor en un hilo
+							DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
+							DS.start();
+							
+							//Se inicia el hilo que va a estar actualizando la tabla
+							MT = new modTabla(VS.model, true);
+							MT.start();
+							
+							cambioServer = false;
+							
+							System.out.println("TERMINO DE CREAR DS Y MT");
+							try {
+								Thread.sleep(5000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							VS.model.setRowCount(0);
+							VS.txtEstado.setText("Activo");
+							VS.txtSocket.setEditable(false);
+							
+						}
+						
+						C.setIp(ActualServer);
 					}else {
 						bandera = true;
 						C.MiCompu.setPuesto("Servidor");
 						C.SetPuesto("Servidor");
 						//Inicia el servidor en un hilo
-						DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
-						DS.start();
+						//DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
+						//DS.start();
 						
 						//Se inicia el hilo que va a estar actualizando la tabla
-						MT = new modTabla(VS.model, true);
-						MT.start();
+						//MT = new modTabla(VS.model, true);
+						//MT.start();
 						
 						//se limpia la tabla y se modifican los txts
 						VS.model.setRowCount(0);
@@ -281,7 +360,11 @@ public class Controlador implements ActionListener
 					System.out.println("NO ERES server");
 					C.MiCompu.setPuesto("Cliente");		
 					C.SetPuesto("Cliente");
+					
 					VC.setVisible(true);
+					VS.setVisible(false);
+					
+					
 				}
 	
 				//ESPERA

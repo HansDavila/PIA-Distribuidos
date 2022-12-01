@@ -18,14 +18,14 @@ public class Computadora implements Serializable, Comparable<Computadora>
 	String SO;
 	float UsoMemoria;
 	double UsoCpu;
-	long Latencia;
+	Double Latencia;
 	int puntos;
 	int puntosEstaticos;
 	
 	
 	//Constructor
 	public Computadora(String cliente, String iP, String estado, String procesador, String velocidad, int nucleos,
-			String capacidad, String sO, float UsoMemoria, double UsoCpu, long Latencia, int puntos, String puesto) 
+			String capacidad, String sO, float UsoMemoria, double UsoCpu, Double Latencia, int puntos, String puesto) 
 	{
 		this.Cliente = cliente;
 		this.IP = iP;
@@ -173,11 +173,11 @@ public class Computadora implements Serializable, Comparable<Computadora>
 		UsoCpu = d;
 	}
 
-	public long getLatencia() {
+	public Double getLatencia() {
 		return Latencia;
 	}
 
-	public void setLatencia(long latencia) {
+	public void setLatencia(Double latencia) {
 		Latencia = latencia;
 	}
 
