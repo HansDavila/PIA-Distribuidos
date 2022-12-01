@@ -2,6 +2,9 @@ package ejercicioTablaMVC;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -18,12 +21,13 @@ public class Controlador implements ActionListener
 	static Server DS;
 	static Cliente C;
 	static EscuchaClientes E;
+	static UdpListener U;
 	
 	static boolean bandera = false;
 	boolean activarEscuchador = true;
 	
 	
-	static boolean cambioServer = false;
+	static boolean cambioServer = true;
 	
 	//Esto es un metodo de modelos que se utiliza si se usa el servidor
 	//sirve para estar actualizando la tabla en la vista en un hilo
@@ -75,7 +79,7 @@ public class Controlador implements ActionListener
 			VC.txtNombre.setText(nombre);
 			VC.txtIpServer.setText(Direccion);
 			
-			escuchadores(false);
+			escuchadores(true);
 		}	
 		
 	}
@@ -95,6 +99,7 @@ public class Controlador implements ActionListener
 			VC.btnConectarse.addActionListener(this);
 			VC.btnDesconectarse.addActionListener(this);
 			VC.btnSalir.addActionListener(this);
+			//VC.btnUDP.addActionListener(this);
 		}
 		else
 		{
@@ -103,6 +108,7 @@ public class Controlador implements ActionListener
 			VC.btnSalir.addActionListener(this);
 			VS.btnIniciarServidor.addActionListener(this);
 			VS.btnTerminarServidor.addActionListener(this);
+			//VC.btnUDP.addActionListener(this);
 
 		}
 	}
@@ -117,9 +123,16 @@ public class Controlador implements ActionListener
 			DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
 			DS.start();
 			
+			M.Estresar(10);
+			
 			//Se inicia el hilo que va a estar actualizando la tabla
 			MT = new modTabla(VS.model, true);
 			MT.start();
+			
+			
+			
+			U = new UdpListener(Integer.parseInt(VS.txtSocket.getText()), true, Direccion);
+			U.start();
 			
 			//se limpia la tabla y se modifican los txts
 			VS.model.setRowCount(0);
@@ -147,7 +160,7 @@ public class Controlador implements ActionListener
 			
 			
 			//CREAR CLIENTE de parte del servidor
-			C = new Cliente(MiCompu, Direccion, Integer.parseInt(VC.txtSocket.getText()), "Servidor");
+			C = new Cliente(MiCompu, Direccion, Integer.parseInt(VC.txtSocket.getText()), "Servidor" );
 			
 			//iniciar hilo cliente
 			C.start();
@@ -225,7 +238,7 @@ public class Controlador implements ActionListener
 			
 			
 			//CREAR CLIENTE
-			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()), "Cliente");
+			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()), "Cliente", Double.parseDouble(VC.txtEstres.getText()));
 			
 			//iniciar hilo cliente
 			C.start();
@@ -253,6 +266,7 @@ public class Controlador implements ActionListener
 		else if( e.getSource() == VC.btnSalir)
 		{
 			System.exit(0);
+			
 		}
 		
 	}
@@ -301,6 +315,13 @@ public class Controlador implements ActionListener
 						
 						VS.setVisible(true);
 						VC.setVisible(false);
+						
+						C.MiCompu.setLoad(Double.parseDouble(VC.txtEstres.getText()));		
+						//JOptionPane.showMessageDialog(VS, C.MiCompu.getLoad());
+						
+						//JOptionPane.showMessageDialog(VC, MT.getAcumulador());
+						
+						
 						
 						if(cambioServer) {
 							System.out.println("EN CAMBIO SERVER");
@@ -360,6 +381,8 @@ public class Controlador implements ActionListener
 					System.out.println("NO ERES server");
 					C.MiCompu.setPuesto("Cliente");		
 					C.SetPuesto("Cliente");
+					C.MiCompu.setLoad(Double.parseDouble(VC.txtEstres.getText()));
+					//JOptionPane.showMessageDialog(VS, C.MiCompu.getLoad());
 					
 					VC.setVisible(true);
 					VS.setVisible(false);

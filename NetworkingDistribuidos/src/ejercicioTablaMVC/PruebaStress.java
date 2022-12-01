@@ -12,11 +12,12 @@ public class PruebaStress {
      * Starts the Load Generation
      * @param args Command line arguments, ignored
      */
-    public PruebaStress(){
+    public PruebaStress(double num){
     	final int numberOfThreads = Runtime.getRuntime().availableProcessors();
         int numCore = numberOfThreads;
         int numThreadsPerCore = 1;
-        double load = 0.6;
+        double load = num;
+        load /= 100;
         final long duration = 100000;
         for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
             new BusyThread("Thread" + thread, load, duration).start();

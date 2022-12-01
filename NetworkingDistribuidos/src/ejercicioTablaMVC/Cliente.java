@@ -4,6 +4,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -11,6 +12,10 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import fr.bmartel.speedtest.SpeedTestReport;
+import fr.bmartel.speedtest.SpeedTestSocket;
+import fr.bmartel.speedtest.inter.ISpeedTestListener;
+import fr.bmartel.speedtest.model.SpeedTestError;
 import oshi.SystemInfo;
 
 public class Cliente extends Thread
@@ -19,6 +24,17 @@ public class Cliente extends Thread
 	String Ip; //IP donde esta el servidor
 	int Puerto;
 	String Puesto;
+	static double valor;
+	double load;
+	
+	public Cliente(Computadora MiCompu, String Ip, int Puerto, String puesto, double load)
+	{
+		this.MiCompu = MiCompu;
+		this.Ip = Ip;
+		this.Puerto = Puerto;
+		this.Puesto = puesto;
+		this.load = load;
+	}
 	
 	public Cliente(Computadora MiCompu, String Ip, int Puerto, String puesto)
 	{
@@ -26,6 +42,7 @@ public class Cliente extends Thread
 		this.Ip = Ip;
 		this.Puerto = Puerto;
 		this.Puesto = puesto;
+		this.load = load;
 	}
 	
 	public void run()
@@ -72,9 +89,18 @@ public class Cliente extends Thread
 				MiCompu.setUsoCpu(sys.getHardware().getProcessor().getSystemCpuLoad(800));
 				
 				MiCompu.setPuesto(Puesto);
+				testVelocidadDescarga(MiCompu);
+				MiCompu.setLatencia(valor);
+				
+				if(load == 0) {
+					
+				}else {
+					MiCompu.setLoad(load);
+				}
+				
+				
 				
 			
-				
 				
 				
 				oos.writeObject(MiCompu);
@@ -136,6 +162,57 @@ public class Cliente extends Thread
 	
 	public void setIp(String Ip) {
 		this.Ip = Ip;
+	}
+	
+	void  testVelocidadDescarga(Computadora PC)
+	{
+		
+		SpeedTestSocket speedTestSocket = new SpeedTestSocket();
+		speedTestSocket.addSpeedTestListener(new ISpeedTestListener()
+		
+		
+				{
+				@Override
+			    public void onCompletion(SpeedTestReport report) {
+			        // called when download/upload is complete
+			        System.out.println("[COMPLETED] rate in bit/s   : " + report.getTransferRateBit());
+			    }
+
+			    @Override
+			    public void onError(SpeedTestError speedTestError, String errorMessage) {
+			    	JOptionPane.showMessageDialog(null, "Hubo un error en la prueba de la velocidad de descarga");
+			    }
+
+			    @Override
+			    public void onProgress(float percent, SpeedTestReport report) {
+			    	BigDecimal speed = report.getTransferRateBit();
+			    	BigDecimal speedMbps = speed.divide(new BigDecimal(1000000));
+			    	
+			    	//final Double anchoBanda = speedMbps.doubleValue();
+			    	
+			    
+			    	valor = speedMbps.doubleValue();
+			    	
+			  
+			    	
+			        // called to notify download/upload progress
+			        //System.out.println("[PROGRESS] progress : " + percent + "%");
+			        //System.out.println("[PROGRESS] rate in Mbps   : " + speedMbps);
+			        //System.out.println(PC.getLatencia());
+			        
+			        
+			    }
+				});
+		
+		
+		//Inicia descarga, tambien se puede con archivos de 100 MB
+		//speedTestSocket.startDownload("https://speed.hetzner.de/100MB.bin",1500);
+		speedTestSocket.startDownload("https://speed.hetzner.de/1GB.bin",1000);
+		//JOptionPane.showMessageDialog(null, anchoBanda);
+		
+		
+		
+		
 	}
 	
 	

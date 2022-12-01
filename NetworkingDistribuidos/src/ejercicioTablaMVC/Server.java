@@ -80,6 +80,7 @@ public class Server extends Thread
 	private Socket s = null;
 	private long horaLlegada;
 	
+	
 	private ObjectInputStream ois = null;
 	private ObjectOutputStream oos = null;
 	
@@ -131,6 +132,13 @@ public class Server extends Thread
 			
 			//se obtiene la ip
 			C.setIP(""+s.getInetAddress());
+			
+			
+			
+			
+			
+			
+			
 			
 			//Se calcula y asigna el tiempo que tardo en llegar el paquete
 			//C.setLatencia(horaLlegada - C.getLatencia());

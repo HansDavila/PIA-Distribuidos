@@ -6,6 +6,7 @@ import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+
 import oshi.SystemInfo;
 import oshi.hardware.HWDiskStore;
 
@@ -21,6 +22,9 @@ import fr.bmartel.speedtest.model.SpeedTestError;
 public class Modelos 
 {
 	static Double valor = 0.0;
+	static ArrayList<BusyThread> arrayHilos = new ArrayList<BusyThread>();
+	
+	
 	
 	public static void setValor(Double valor) {
 		Modelos.valor = valor;
@@ -188,6 +192,65 @@ public class Modelos
 		return Controlador.ActualServer;
 	}
 	
+	static public void Estresar(double num){
+    	final int numberOfThreads = Runtime.getRuntime().availableProcessors();
+        int numCore = numberOfThreads;
+        int numThreadsPerCore = 1;
+        double load = num;
+        load /= 100;
+        final long duration = 100000;
+        for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
+            
+            arrayHilos.add(new BusyThread("Thread" + thread, load, duration));
+            arrayHilos.get(thread).start();
+            
+        }
+    }
+	
+	public static class BusyThread extends Thread {
+        private double load;
+        private long duration;
+
+        /**
+         * Constructor which creates the thread
+         * @param name Name of this thread
+         * @param load Load % that this thread should generate
+         * @param duration Duration that this thread should generate the load for
+         */
+        public BusyThread(String name, double load, long duration) {
+            super(name);
+            this.load = load;
+            this.duration = duration;
+        }
+        
+        public void setLoad(double load) {
+        	this.load = load;
+        }
+
+        /**
+         * Generates the load when run
+         */
+        @Override
+        public void run() {
+            long startTime = System.currentTimeMillis();
+            try {
+                // Loop for the given duration
+                while (System.currentTimeMillis() - startTime < duration) {
+                    // Every 100ms, sleep for the percentage of unladen time
+                    if (System.currentTimeMillis() % 100 == 0) {
+                        Thread.sleep((long) Math.floor((1 - load) * 100));
+                    }
+                    
+                    
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	
+	
+	
 	
 	
 	
@@ -198,17 +261,28 @@ public class Modelos
 		boolean continuar;
 		DefaultTableModel model;
 		static Double speed = 0.0; 
+		double acumulador = 0.0;
 		
 		public modTabla(DefaultTableModel model, boolean continuar)
 		{
 			this.model = model;
 			this.continuar = continuar;
 		}
+		
+		public double getAcumulador() {
+			return acumulador;
+		}
 
 		public void run()
 		{	
 			while(continuar == true)
 			{
+
+				acumulador = calcularCarga();
+
+				for(BusyThread hilo: arrayHilos) {
+					hilo.setLoad(acumulador);
+				}
 				
 				try 
 				{
@@ -223,14 +297,17 @@ public class Modelos
 				model.setRowCount(0);
 				
 				
+				
+				
+				
+			
 				//Calculo de puntos dinamicos
 				for(Computadora PC:Controlador.computadoras) 
 				{
 					PC.setPuntos(CalcularPuntosDinamicos(PC));
-					
-					System.out.println("LATENCIA -> " + valor);
-					PC.setLatencia(valor);
+
 				}
+				
 				
 				//Se ordenan elementos de la tabla
 				Collections.sort(Controlador.computadoras);
@@ -262,6 +339,8 @@ public class Modelos
 		public boolean getContinuar() {
 			return continuar;
 		}
+		
+		
 
 		public void setContinuar(boolean continuar) {
 			this.continuar = continuar;
@@ -295,55 +374,29 @@ public class Modelos
 			return puntos;
 		}
 		
-		void  testVelocidadDescarga(Computadora PC)
-		{
+		private double  calcularCarga() {
+			double acumulador = 0.0;
+			//Calculo de puntos dinamicos
+			for(Computadora PC:Controlador.computadoras) 
+			{
+				
+				
+				//Obtenemos las cargas totales
+				acumulador += PC.getLoad();					
 			
-			SpeedTestSocket speedTestSocket = new SpeedTestSocket();
-			speedTestSocket.addSpeedTestListener(new ISpeedTestListener()
+			}
 			
 			
-					{
-					@Override
-				    public void onCompletion(SpeedTestReport report) {
-				        // called when download/upload is complete
-				        System.out.println("[COMPLETED] rate in bit/s   : " + report.getTransferRateBit());
-				    }
 
-				    @Override
-				    public void onError(SpeedTestError speedTestError, String errorMessage) {
-				    	JOptionPane.showMessageDialog(null, "Hubo un error en la prueba de la velocidad de descarga");
-				    }
-
-				    @Override
-				    public void onProgress(float percent, SpeedTestReport report) {
-				    	BigDecimal speed = report.getTransferRateBit();
-				    	BigDecimal speedMbps = speed.divide(new BigDecimal(1000000));
-				    	
-				    	//final Double anchoBanda = speedMbps.doubleValue();
-				    	
-				    	valor = speedMbps.doubleValue();
-				    	
-				  
-				    	
-				        // called to notify download/upload progress
-				        System.out.println("[PROGRESS] progress : " + percent + "%");
-				        System.out.println("[PROGRESS] rate in Mbps   : " + speedMbps);
-				        System.out.println(PC.getLatencia());
-				        
-				        
-				    }
-					});
+			if(acumulador > 100) {
+				acumulador = 100;
+			}
 			
-			
-			//Inicia descarga, tambien se puede con archivos de 100 MB
-			//speedTestSocket.startDownload("https://speed.hetzner.de/100MB.bin",1500);
-			speedTestSocket.startDownload("https://speed.hetzner.de/1GB.bin",1500);
-			//JOptionPane.showMessageDialog(null, anchoBanda);
-			
-			
-			
-			
+			return acumulador;
 		}
+
+		
+		
 		
 	
 		
