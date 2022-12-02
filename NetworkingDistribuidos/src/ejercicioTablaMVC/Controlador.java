@@ -314,7 +314,7 @@ public class Controlador implements ActionListener
 						C.MiCompu.setPuesto("Servidor");
 						
 						VS.setVisible(true);
-						VC.setVisible(false);
+						VC.setVisible(true);
 						
 						C.MiCompu.setLoad(Double.parseDouble(VC.txtEstres.getText()));		
 						//JOptionPane.showMessageDialog(VS, C.MiCompu.getLoad());

@@ -284,6 +284,8 @@ public class Modelos
 					hilo.setLoad(acumulador);
 				}
 				
+				//System.out.println("EL VALOR ACUMULADO ES "+acumulador);
+				
 				try 
 				{
 					Thread.sleep(1000);

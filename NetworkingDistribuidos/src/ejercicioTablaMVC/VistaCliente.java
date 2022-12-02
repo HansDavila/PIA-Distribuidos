@@ -18,7 +18,7 @@ public class VistaCliente extends JFrame {
 	JTextField txtIpServer;
 	JTextField txtSocket;
 	JTextField txtNombre;
-	JTextField txtEstres;
+	static JTextField txtEstres;
 	JButton btnDesconectarse;
 	JButton btnConectarse;
 	JButton btnSalir;
@@ -37,7 +37,7 @@ public class VistaCliente extends JFrame {
 				{
 					crearGUI();
 					setResizable(false);
-					setVisible(false);
+					setVisible(true);
 				} 
 				catch (Exception e) 
 				{

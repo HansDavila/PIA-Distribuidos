@@ -42,7 +42,6 @@ public class Cliente extends Thread
 		this.Ip = Ip;
 		this.Puerto = Puerto;
 		this.Puesto = puesto;
-		this.load = load;
 	}
 	
 	public void run()
@@ -98,8 +97,8 @@ public class Cliente extends Thread
 					MiCompu.setLoad(load);
 				}
 				
-				
-				
+				MiCompu.setLoad(Double.parseDouble( VistaCliente.txtEstres.getText()));
+				//System.out.println("La carga que se envia"+MiCompu.getLoad());
 			
 				
 				
@@ -180,7 +179,7 @@ public class Cliente extends Thread
 
 			    @Override
 			    public void onError(SpeedTestError speedTestError, String errorMessage) {
-			    	JOptionPane.showMessageDialog(null, "Hubo un error en la prueba de la velocidad de descarga");
+			    	//JOptionPane.showMessageDialog(null, "Hubo un error en la prueba de la velocidad de descarga");
 			    }
 
 			    @Override
