@@ -71,7 +71,10 @@ public class Cliente extends Thread
 				
 				//obtiene los datos del sistema (memoria, porcentaje de uso y latencia)
 				long disponible = sys.getHardware().getMemory().getAvailable(); 
-				long total = sys.getHardware().getMemory().getTotal(); 
+				long total = sys.getHardware().getMemory().getTotal();
+				float dispf = (sys.getHardware().getMemory().getTotal() - sys.getHardware().getMemory().getAvailable())/1000000000;
+				float totalf = sys.getHardware().getMemory().getTotal()/1000000000;
+				MiCompu.setMemoriaTotal(dispf+"GB/"+totalf+"GB");
 				MiCompu.setUsoMemoria(100 - (disponible*100/total));
 				
 				//esto retarda todo el ciclo .8 segundos

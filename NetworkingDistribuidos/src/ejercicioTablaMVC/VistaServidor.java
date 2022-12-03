@@ -36,7 +36,7 @@ public class VistaServidor extends JFrame {
 				{
 					crearGUI();
 					setResizable(false);
-					setVisible(false);
+					setVisible(true);
 				} 
 				catch (Exception e) 
 				{
@@ -74,7 +74,7 @@ public class VistaServidor extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Cliente", "Puesto", "IP", "Estado", "Procesador", "Velocidad", "Nucleos", "Capacidad DD", "Version S.O.", "Uso CPU", "Uso Memoria", "Latencia", "Puntuación"
+				"Cliente", "Puesto", "IP", "Estado", "Procesador", "Velocidad", "Nucleos", "Capacidad DD", "Version S.O.", "Uso CPU", "Uso Memoria", "Velocidad", "Puntuación"
 			}
 		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(73);

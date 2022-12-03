@@ -316,7 +316,7 @@ public class Controlador implements ActionListener, ChangeListener
 						C.MiCompu.setPuesto("Servidor");
 						
 						VS.setVisible(true);
-						VC.setVisible(false);	
+						VC.setVisible(true);	
 						//JOptionPane.showMessageDialog(VS, C.MiCompu.getLoad());
 						
 						//JOptionPane.showMessageDialog(VC, MT.getAcumulador());

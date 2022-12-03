@@ -307,8 +307,8 @@ public class Modelos
 				                     A.getCapacidad(),
 				                     A.getSO(),
 				                     Math.round(A.getUsoCpu()*100) +" %",
-				                     A.getUsoMemoria()+" %",
-				                     A.getLatencia(),
+				                     A.getMemoriaTotal()+"("+A.getUsoMemoria()+" %)",
+				                     A.getLatencia()+"Mbps",
 				                     A.getPuntos()
 				                     
 				              });

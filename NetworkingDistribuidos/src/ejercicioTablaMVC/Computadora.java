@@ -13,10 +13,14 @@ public class Computadora implements Serializable, Comparable<Computadora>
 	String puesto;
 	double load = 0.01;
 	
+	
 
 	int Nucleos;
 	String Capacidad;
 	String SO;
+	String MemoriaTotal;
+	
+
 	float UsoMemoria;
 	double UsoCpu;
 	Double Latencia;
@@ -189,6 +193,14 @@ public class Computadora implements Serializable, Comparable<Computadora>
 
 	public void setLatencia(Double latencia) {
 		Latencia = latencia;
+	}
+	
+	public String getMemoriaTotal() {
+		return MemoriaTotal;
+	}
+
+	public void setMemoriaTotal(String memoriaTotal) {
+		MemoriaTotal = memoriaTotal;
 	}
 
 	@Override
