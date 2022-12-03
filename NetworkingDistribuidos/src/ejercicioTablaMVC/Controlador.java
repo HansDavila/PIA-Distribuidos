@@ -27,7 +27,7 @@ public class Controlador implements ActionListener
 	boolean activarEscuchador = true;
 	
 	
-	static boolean cambioServer = true;
+	static boolean cambioServer = false;
 	
 	//Esto es un metodo de modelos que se utiliza si se usa el servidor
 	//sirve para estar actualizando la tabla en la vista en un hilo
@@ -242,6 +242,7 @@ public class Controlador implements ActionListener
 			
 			//iniciar hilo cliente
 			C.start();
+			cambioServer = true;
 			
 			if(activarEscuchador) {
 				EscuchaClientes E = new EscuchaClientes(C, VC, DS, MT, VS, M);
@@ -342,6 +343,13 @@ public class Controlador implements ActionListener
 							
 							cambioServer = false;
 							
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
 							System.out.println("TERMINO DE CREAR DS Y MT");
 							try {
 								Thread.sleep(5000);
@@ -349,6 +357,7 @@ public class Controlador implements ActionListener
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
+							JOptionPane.showMessageDialog(VC, "NUEVO SERVIDOR -> " +ActualServer + " PUESTO SERVER -> " + C.MiCompu.getPuesto());
 							
 							VS.model.setRowCount(0);
 							VS.txtEstado.setText("Activo");
@@ -357,6 +366,7 @@ public class Controlador implements ActionListener
 						}
 						
 						C.setIp(ActualServer);
+						
 					}else {
 						bandera = true;
 						C.MiCompu.setPuesto("Servidor");
@@ -386,6 +396,9 @@ public class Controlador implements ActionListener
 					
 					VC.setVisible(true);
 					VS.setVisible(false);
+					
+					JOptionPane.showMessageDialog(VC, "ACTUAL SERVER: " + ActualServer );
+					
 					
 					
 				}
