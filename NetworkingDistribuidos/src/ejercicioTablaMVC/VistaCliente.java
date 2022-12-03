@@ -135,7 +135,7 @@ public class VistaCliente extends JFrame {
 		lblEstres.setBounds(83, 290, 333, 24);
 		contentPane.add(lblEstres);
 		
-		slider = new JSlider(0, 100, 10);
+		slider = new JSlider(0, 100, 1);
 		slider.setBounds(150, 324, 200, 51);
 		slider.setMajorTickSpacing(25);
 		slider.setMinorTickSpacing(5);

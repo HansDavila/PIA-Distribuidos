@@ -29,7 +29,8 @@ public class Controlador implements ActionListener, ChangeListener
 	static boolean bandera = false;
 	boolean activarEscuchador = true;
 	
-	static boolean cambioServer = true;
+	//ESTA DE MOMENTO SERA FALSE
+	static boolean cambioServer = false;
 	
 	//Esto es un metodo de modelos que se utiliza si se usa el servidor
 	//sirve para estar actualizando la tabla en la vista en un hilo
@@ -182,6 +183,8 @@ public class Controlador implements ActionListener, ChangeListener
 			
 			//instancia en una linea... interesante...
 			//(new modTabla(VS.model, true)).start();
+			
+			C.MiCompu.setLoad(0.01);
 		}
 		else if( e.getSource() == VS.btnTerminarServidor)
 		{
@@ -224,10 +227,6 @@ public class Controlador implements ActionListener, ChangeListener
 			MT.setContinuar(false);
 			
 			
-			
-			
-			
-			
 		}
 		else if( e.getSource() == VC.btnConectarse)
 		{
@@ -244,6 +243,7 @@ public class Controlador implements ActionListener, ChangeListener
 			
 			//CREAR CLIENTE
 			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()), "Cliente");
+			C.MiCompu.setLoad(0.01);
 			
 			//iniciar hilo cliente
 			C.start();
