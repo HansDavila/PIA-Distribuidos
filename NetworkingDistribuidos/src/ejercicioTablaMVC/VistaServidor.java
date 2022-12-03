@@ -36,7 +36,7 @@ public class VistaServidor extends JFrame {
 				{
 					crearGUI();
 					setResizable(false);
-					setVisible(true);
+					setVisible(false);
 				} 
 				catch (Exception e) 
 				{

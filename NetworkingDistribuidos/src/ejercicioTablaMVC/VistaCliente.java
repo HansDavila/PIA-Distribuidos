@@ -37,7 +37,7 @@ public class VistaCliente extends JFrame {
 				{
 					crearGUI();
 					setResizable(false);
-					setVisible(true);
+					setVisible(false);
 				} 
 				catch (Exception e) 
 				{
