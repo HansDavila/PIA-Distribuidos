@@ -11,7 +11,7 @@ public class Computadora implements Serializable, Comparable<Computadora>
 	String Procesador;
 	String Velocidad;
 	String puesto;
-	double load;
+	double load = 0.01;
 	
 
 	int Nucleos;

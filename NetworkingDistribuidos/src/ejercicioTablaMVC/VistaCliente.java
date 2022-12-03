@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -18,11 +19,10 @@ public class VistaCliente extends JFrame {
 	JTextField txtIpServer;
 	JTextField txtSocket;
 	JTextField txtNombre;
-	static JTextField txtEstres;
 	JButton btnDesconectarse;
 	JButton btnConectarse;
 	JButton btnSalir;
-	JButton btnUDP;
+	JSlider slider;
 
 	/**
 	 * Launch the application.
@@ -37,7 +37,7 @@ public class VistaCliente extends JFrame {
 				{
 					crearGUI();
 					setResizable(false);
-					setVisible(true);
+					setVisible(false);
 				} 
 				catch (Exception e) 
 				{
@@ -53,7 +53,7 @@ public class VistaCliente extends JFrame {
 	private void crearGUI() {
 		setTitle("Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 600);
+		setBounds(100, 100, 500, 525);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -67,20 +67,18 @@ public class VistaCliente extends JFrame {
 		
 		btnDesconectarse = new JButton("Desconectarse");
 		btnDesconectarse.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnDesconectarse.setBounds(42, 369, 184, 33);
+		btnDesconectarse.setBounds(40, 384, 184, 33);
 		contentPane.add(btnDesconectarse);
 		
 		btnConectarse = new JButton("Conectarse");
 		btnConectarse.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnConectarse.setBounds(264, 369, 184, 33);
+		btnConectarse.setBounds(262, 384, 184, 33);
 		contentPane.add(btnConectarse);
 		
 		btnSalir = new JButton("Salir");
 		btnSalir.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnSalir.setBounds(200, 420, 114, 33);
+		btnSalir.setBounds(194, 425, 114, 33);
 		contentPane.add(btnSalir);
-		
-		
 		
 		JLabel lblEstado = new JLabel("Estado:");
 		lblEstado.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -104,7 +102,6 @@ public class VistaCliente extends JFrame {
 		txtIpServer.setFont(new Font("Arial", Font.PLAIN, 19));
 		txtIpServer.setColumns(10);
 		txtIpServer.setBounds(195, 165, 192, 24);
-		txtIpServer.setText("");
 		contentPane.add(txtIpServer);
 		
 		JLabel lblSocket = new JLabel("Socket:");
@@ -130,27 +127,22 @@ public class VistaCliente extends JFrame {
 		txtNombre.setFont(new Font("Arial", Font.PLAIN, 19));
 		txtNombre.setColumns(10);
 		txtNombre.setBounds(195, 124, 192, 24);
-		txtNombre.setText("");
 		contentPane.add(txtNombre);
 		
-		JLabel lblEstres = new JLabel("Estres deseado en servidor (0 - 100)");
+		JLabel lblEstres = new JLabel("Estrés deseado en servidor");
+		lblEstres.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEstres.setFont(new Font("Arial", Font.PLAIN, 20));
 		lblEstres.setBounds(83, 290, 333, 24);
 		contentPane.add(lblEstres);
 		
-		txtEstres = new JTextField();
-		txtEstres.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtEstres.setText("5");
-		txtEstres.setFont(new Font("Arial", Font.PLAIN, 19));
-		txtEstres.setColumns(10);
-		txtEstres.setBounds(191, 320, 76, 24);
-		contentPane.add(txtEstres);
-		
-		JLabel lblPorciento = new JLabel("%");
-		lblPorciento.setHorizontalAlignment(SwingConstants.LEFT);
-		lblPorciento.setFont(new Font("Arial", Font.PLAIN, 20));
-		lblPorciento.setBounds(272, 320, 82, 24);
-		contentPane.add(lblPorciento);
+		slider = new JSlider(0, 100, 10);
+		slider.setBounds(150, 324, 200, 51);
+		slider.setMajorTickSpacing(25);
+		slider.setMinorTickSpacing(5);
+		slider.setPaintTicks(true);
+		slider.setPaintLabels(true);
+		contentPane.add(slider);
+
 	}
 }
 	

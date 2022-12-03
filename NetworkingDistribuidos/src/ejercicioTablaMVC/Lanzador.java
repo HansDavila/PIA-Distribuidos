@@ -11,5 +11,4 @@ public class Lanzador
 		Controlador C = new Controlador(VC, VS, M);
 	}
 	
-	
 }

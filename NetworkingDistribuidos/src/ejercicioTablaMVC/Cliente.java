@@ -25,16 +25,6 @@ public class Cliente extends Thread
 	int Puerto;
 	String Puesto;
 	static double valor;
-	double load;
-	
-	public Cliente(Computadora MiCompu, String Ip, int Puerto, String puesto, double load)
-	{
-		this.MiCompu = MiCompu;
-		this.Ip = Ip;
-		this.Puerto = Puerto;
-		this.Puesto = puesto;
-		this.load = load;
-	}
 	
 	public Cliente(Computadora MiCompu, String Ip, int Puerto, String puesto)
 	{
@@ -91,13 +81,6 @@ public class Cliente extends Thread
 				testVelocidadDescarga(MiCompu);
 				MiCompu.setLatencia(valor);
 				
-				if(load == 0) {
-					
-				}else {
-					MiCompu.setLoad(load);
-				}
-				
-				MiCompu.setLoad(Double.parseDouble( VistaCliente.txtEstres.getText()));
 				//System.out.println("La carga que se envia"+MiCompu.getLoad());
 			
 				
@@ -208,9 +191,6 @@ public class Cliente extends Thread
 		//speedTestSocket.startDownload("https://speed.hetzner.de/100MB.bin",1500);
 		speedTestSocket.startDownload("https://speed.hetzner.de/1GB.bin",1000);
 		//JOptionPane.showMessageDialog(null, anchoBanda);
-		
-		
-		
 		
 	}
 	

@@ -11,14 +11,19 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JSlider;
 
 public class PrototipoVistaCliente extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtEstado;
-	private JTextField txtIpServer;
-	private JTextField txtSocket;
-	private JTextField txtNombre;
+	JTextField txtEstado;
+	JTextField txtIpServer;
+	JTextField txtSocket;
+	JTextField txtNombre;
+	JButton btnDesconectarse;
+	JButton btnConectarse;
+	JButton btnSalir;
+	JSlider slider;
 
 	/**
 	 * Launch the application.
@@ -42,7 +47,7 @@ public class PrototipoVistaCliente extends JFrame {
 	public PrototipoVistaCliente() {
 		setTitle("Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 442);
+		setBounds(100, 100, 500, 525);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -54,19 +59,19 @@ public class PrototipoVistaCliente extends JFrame {
 		lblCliente.setBounds(137, 39, 217, 46);
 		contentPane.add(lblCliente);
 		
-		JButton btnDesconectarse = new JButton("Desconectarse");
+		btnDesconectarse = new JButton("Desconectarse");
 		btnDesconectarse.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnDesconectarse.setBounds(42, 299, 184, 33);
+		btnDesconectarse.setBounds(40, 384, 184, 33);
 		contentPane.add(btnDesconectarse);
 		
-		JButton btnConectarse = new JButton("Conectarse");
+		btnConectarse = new JButton("Conectarse");
 		btnConectarse.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnConectarse.setBounds(264, 299, 184, 33);
+		btnConectarse.setBounds(262, 384, 184, 33);
 		contentPane.add(btnConectarse);
 		
-		JButton btnSalir = new JButton("Salir");
+		btnSalir = new JButton("Salir");
 		btnSalir.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnSalir.setBounds(196, 340, 114, 33);
+		btnSalir.setBounds(194, 425, 114, 33);
 		contentPane.add(btnSalir);
 		
 		JLabel lblEstado = new JLabel("Estado:");
@@ -117,5 +122,21 @@ public class PrototipoVistaCliente extends JFrame {
 		txtNombre.setColumns(10);
 		txtNombre.setBounds(195, 124, 192, 24);
 		contentPane.add(txtNombre);
+		
+		JLabel lblEstres = new JLabel("Estrés deseado en servidor");
+		lblEstres.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEstres.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblEstres.setBounds(83, 290, 333, 24);
+		contentPane.add(lblEstres);
+		
+		slider = new JSlider(0, 100, 10);
+		slider.setBounds(150, 324, 200, 51);
+		slider.setMajorTickSpacing(25);
+		slider.setMinorTickSpacing(5);
+		slider.setPaintTicks(true);
+		slider.setPaintLabels(true);
+		contentPane.add(slider);
+
 	}
 }
+

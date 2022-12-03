@@ -192,66 +192,52 @@ public class Modelos
 		return Controlador.ActualServer;
 	}
 	
-	static public void Estresar(double num){
-    	final int numberOfThreads = Runtime.getRuntime().availableProcessors();
-        int numCore = numberOfThreads;
-        int numThreadsPerCore = 1;
-        double load = num;
-        load /= 100;
-        final long duration = 100000;
-        for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
-            
-            arrayHilos.add(new BusyThread("Thread" + thread, load, duration));
-            arrayHilos.get(thread).start();
-            
-        }
-    }
+	 public void IniciarCarga(double carga)
+	    {
+	    	//1. Se obtiene el numero de nucleos del sistema
+	        int numCore = (new SystemInfo()).getHardware().getProcessor().getPhysicalProcessorCount();
+	        
+	        int numThreadsPerCore = 2;
+	        double load = carga;
+	        	for (int thread = 0; thread < numCore * numThreadsPerCore; thread++) {
+	            arrayHilos.add(new BusyThread(load));
+	            arrayHilos.get(thread).start();
+	            
+	        }
+	    }
 	
 	public static class BusyThread extends Thread {
         private double load;
-        private long duration;
+        private boolean continuar = true;
 
-        /**
-         * Constructor which creates the thread
-         * @param name Name of this thread
-         * @param load Load % that this thread should generate
-         * @param duration Duration that this thread should generate the load for
-         */
-        public BusyThread(String name, double load, long duration) {
-            super(name);
-            this.load = load;
-            this.duration = duration;
-        }
-        
-        public void setLoad(double load) {
-        	this.load = load;
+        public BusyThread(double load) 
+        {
+        	this.load = load; 
         }
 
-        /**
-         * Generates the load when run
-         */
         @Override
         public void run() {
-            long startTime = System.currentTimeMillis();
             try {
-                // Loop for the given duration
-                while (System.currentTimeMillis() - startTime < duration) {
+            	// Loop hasta que continuar ya no sea true
+                while (continuar) {
                     // Every 100ms, sleep for the percentage of unladen time
                     if (System.currentTimeMillis() % 100 == 0) {
                         Thread.sleep((long) Math.floor((1 - load) * 100));
                     }
-                    
                     
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        
+        public void setLoad(double load) {
+        	this.load = load;
+        }
+        public void setContinuar(boolean continuar) {
+			this.continuar = continuar;
+		}
     }
-	
-	
-	
-	
 	
 	
 	//---------------------------hilo para actualizar la tabla---------------------------
@@ -261,16 +247,13 @@ public class Modelos
 		boolean continuar;
 		DefaultTableModel model;
 		static Double speed = 0.0; 
-		double acumulador = 0.0;
+		//este es para sumar todas las peticiones de load de los clientes
+		private double acumulador = 0.0;
 		
 		public modTabla(DefaultTableModel model, boolean continuar)
 		{
 			this.model = model;
 			this.continuar = continuar;
-		}
-		
-		public double getAcumulador() {
-			return acumulador;
 		}
 
 		public void run()
@@ -299,10 +282,6 @@ public class Modelos
 				model.setRowCount(0);
 				
 				
-				
-				
-				
-			
 				//Calculo de puntos dinamicos
 				for(Computadora PC:Controlador.computadoras) 
 				{
@@ -336,13 +315,20 @@ public class Modelos
 					
 				}
 				
-			}			
+			}
+			
+			//si se llega aqui es que se le ordeno al programa terminar el servidor
+			//asi que tambien se terminan todos los hilos abiertos
+			for(BusyThread hilo: arrayHilos) {
+				hilo.setContinuar(false);
+			}
+			//se limpia el arraylist
+			arrayHilos.clear();
+			
 		}		
 		public boolean getContinuar() {
 			return continuar;
 		}
-		
-		
 
 		public void setContinuar(boolean continuar) {
 			this.continuar = continuar;
@@ -376,34 +362,23 @@ public class Modelos
 			return puntos;
 		}
 		
-		private double  calcularCarga() {
+		//Suma todos los loads del arraylist para saber cuanto decirle al programa que se estrese
+		private double calcularCarga() {
 			double acumulador = 0.0;
 			//Calculo de puntos dinamicos
 			for(Computadora PC:Controlador.computadoras) 
 			{
-				
-				
 				//Obtenemos las cargas totales
 				acumulador += PC.getLoad();					
 			
 			}
-			
-			
 
-			if(acumulador > 100) {
-				acumulador = 100;
+			if(acumulador > 1) {
+				acumulador = 1;
 			}
 			
 			return acumulador;
 		}
-
-		
-		
-		
-	
-		
-		
-		
 		
 	}
 }

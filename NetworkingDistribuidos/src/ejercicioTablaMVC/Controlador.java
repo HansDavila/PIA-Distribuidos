@@ -8,12 +8,15 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import ejercicioTablaMVC.Modelos.modTabla;
+import oshi.SystemInfo;
 
 
-public class Controlador implements ActionListener
+public class Controlador implements ActionListener, ChangeListener
 {
 	static VistaCliente VC;
 	static VistaServidor VS;
@@ -25,7 +28,6 @@ public class Controlador implements ActionListener
 	
 	static boolean bandera = false;
 	boolean activarEscuchador = true;
-	
 	
 	static boolean cambioServer = true;
 	
@@ -99,6 +101,7 @@ public class Controlador implements ActionListener
 			VC.btnConectarse.addActionListener(this);
 			VC.btnDesconectarse.addActionListener(this);
 			VC.btnSalir.addActionListener(this);
+			VC.slider.addChangeListener(this);
 			//VC.btnUDP.addActionListener(this);
 		}
 		else
@@ -108,6 +111,7 @@ public class Controlador implements ActionListener
 			VC.btnSalir.addActionListener(this);
 			VS.btnIniciarServidor.addActionListener(this);
 			VS.btnTerminarServidor.addActionListener(this);
+			VC.slider.addChangeListener(this);
 			//VC.btnUDP.addActionListener(this);
 
 		}
@@ -123,7 +127,8 @@ public class Controlador implements ActionListener
 			DS = new Server(Integer.parseInt(VS.txtSocket.getText()), true);
 			DS.start();
 			
-			M.Estresar(10);
+			//inicia los hilos que cargan el cpu
+			M.IniciarCarga(0.05);
 			
 			//Se inicia el hilo que va a estar actualizando la tabla
 			MT = new modTabla(VS.model, true);
@@ -238,7 +243,7 @@ public class Controlador implements ActionListener
 			
 			
 			//CREAR CLIENTE
-			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()), "Cliente", Double.parseDouble(VC.txtEstres.getText()));
+			C = new Cliente(MiCompu, VC.txtIpServer.getText(), Integer.parseInt(VC.txtSocket.getText()), "Cliente");
 			
 			//iniciar hilo cliente
 			C.start();
@@ -287,9 +292,6 @@ public class Controlador implements ActionListener
 		}
 		
 		
-		
-
-		
 		public void setEstado(boolean estado) {
 			this.estado = estado;
 		}
@@ -314,9 +316,7 @@ public class Controlador implements ActionListener
 						C.MiCompu.setPuesto("Servidor");
 						
 						VS.setVisible(true);
-						VC.setVisible(true);
-						
-						C.MiCompu.setLoad(Double.parseDouble(VC.txtEstres.getText()));		
+						VC.setVisible(false);	
 						//JOptionPane.showMessageDialog(VS, C.MiCompu.getLoad());
 						
 						//JOptionPane.showMessageDialog(VC, MT.getAcumulador());
@@ -381,7 +381,6 @@ public class Controlador implements ActionListener
 					System.out.println("NO ERES server");
 					C.MiCompu.setPuesto("Cliente");		
 					C.SetPuesto("Cliente");
-					C.MiCompu.setLoad(Double.parseDouble(VC.txtEstres.getText()));
 					//JOptionPane.showMessageDialog(VS, C.MiCompu.getLoad());
 					
 					VC.setVisible(true);
@@ -402,18 +401,24 @@ public class Controlador implements ActionListener
 				if(C.MiCompu.getPuesto().equals("Servidor")) 
 				{
 					System.out.println("CARGA ACTUAL CPU -> " + (C.MiCompu.getUsoCpu()*100));
+					//cuando el uso es mayor al 90%
 					if((C.MiCompu.getUsoCpu()*100) > 90) 
 					{
-						
-						JOptionPane.showMessageDialog(VS, "ASIGNANDO SERVER");
-						M.nuevoServidor();
-						
-						try {
-							Thread.sleep(10000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						//aqui saca la media del uso del cpu durante 3 segundos y si la media es mayor a 90, entonces
+						//hace lo del swicheo de servidor
+						if((new SystemInfo()).getHardware().getProcessor().getSystemCpuLoad(5000) >0.9)
+						{
+							JOptionPane.showMessageDialog(VS, "ASIGNANDO SERVER");
+							M.nuevoServidor();
+							
+							try {
+								Thread.sleep(10000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
+						
 						
 						
 					
@@ -435,6 +440,20 @@ public class Controlador implements ActionListener
 				
 			}
 		}
+	}
+
+	//metodo que se ejecuta al mover el slider de la vista cliente
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		double valorSlider = VC.slider.getValue();
+		valorSlider = valorSlider/100;
+		
+		if(C!=null)
+		{
+			C.MiCompu.setLoad(valorSlider);
+		}
+		
 	}
 	
 	
